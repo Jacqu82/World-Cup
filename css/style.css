@@ -1,0 +1,65 @@
+body {
+    background-image: url("dark.jpg");
+    color: #f2dede;
+}
+
+.container
+{
+    width: 1000px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+h1
+{
+    font-family: 'Trocchi', serif;
+    font-size: 45px;
+    font-weight: normal;
+    line-height: 48px;
+    /*margin: 0;*/
+}
+
+.forms, #username, #password, #id
+{
+    width: 30%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #0f192a;
+}
+
+.button, button
+{
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 30%;
+    border-radius: 4px;
+}
+
+.links
+{
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 30%;
+    border-radius: 4px;
+}
+
+.g-recaptcha
+{
+    width: 300px;
+    margin: 0 auto;
+}
+
+.error
+{
+    color: gold;
+}
