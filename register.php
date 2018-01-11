@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         //check exiting username
         $users = UserRepository::loadAllUsersByUsername($connection, $username);
-        //var_dump($users);
         if ($users->rowCount() > 0) {
             $is_ok = false;
             $_SESSION['e_username'] = 'Login ' . $_POST['username']. ' już znajduje się w bazie danych! Wybierz inny!';

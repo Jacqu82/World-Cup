@@ -63,3 +63,9 @@ h1
 {
     color: gold;
 }
+
+.user
+{
+    float: right;
+    margin-top: -15px;
+}

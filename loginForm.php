@@ -6,13 +6,11 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>World Cup 2018 - Login</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <link href="css/style.css" rel="stylesheet">
-</head>
+<?php
+
+include 'widget/head.php';
+
+?>
 <body>
 <div class="container text-center">
     <h1>Zaloguj się na swoje konto</h1>
@@ -41,7 +39,8 @@ session_start();
     </form>
     <hr/>
     <div class="row">
-        <h4>Nie masz konta? <a href="registerForm.php" class="btn btn-info links">Zarejestruj się</a></h4>
+        <h3>Nie masz konta?</h3>
+        <h4><a href="registerForm.php" class="btn btn-info links">Zarejestruj się</a></h4>
     </div>
 </div>
 

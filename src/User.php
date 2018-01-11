@@ -16,6 +16,12 @@ class User
         $this->password = '';
     }
 
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -45,7 +51,7 @@ class User
 
     public function setPassword($password)
     {
-        $this->password = password_hash($password, PASSWORD_DEFAULT);
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
         return $this;
     }
 
@@ -66,20 +72,65 @@ class User
             $sql = "INSERT INTO users (username, email, password) VALUES (:username, :email, :password)";
 
             $result = $connection->prepare($sql);
-            if (!$result) {
-                die("Database Error!" . $connection->errorInfo());
-            }
-
             $result->bindParam('username', $this->username, PDO::PARAM_STR);
             $result->bindParam('email', $this->email, PDO::PARAM_STR);
             $result->bindParam('password', $this->password, PDO::PARAM_STR);
 
             $result->execute();
-
-            return $result;
+            if ($result) {
+                $this->id = $connection->lastInsertId();
+            } else {
+                die("Connection Error! " . $connection->errorInfo());
+            }
         }
-
         return false;
     }
 
+    public function updateUsername(PDO $connection)
+    {
+        $sql = "UPDATE users SET username = :username WHERE id = :id";
+        $result = $connection->prepare($sql);
+
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('username', $this->username);
+        $result->bindParam('id', $this->id);
+        $result->execute();
+
+        return true;
+    }
+
+    public function updateEmail(PDO $connection)
+    {
+        $sql = "UPDATE users SET email = :email WHERE id = :id";
+        $result = $connection->prepare($sql);
+
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('email', $this->email);
+        $result->bindParam('id', $this->id);
+        $result->execute();
+
+        return true;
+    }
+
+    public function updatePassword(PDO $connection)
+    {
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $result = $connection->prepare($sql);
+
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('password', $this->password);
+        $result->bindParam('id', $this->id);
+        $result->execute();
+
+        return true;
+    }
 }

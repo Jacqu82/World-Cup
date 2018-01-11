@@ -30,13 +30,11 @@ if (isset($_SESSION['e_bot'])) {
 ?>
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>World Cup 2018 - Rejestracja</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <link href="css/style.css" rel="stylesheet">
-</head>
+<?php
+
+include 'head.php';
+
+?>
 <body>
 <div class="container text-center">
     <h2>Gratulacje! Poprawnie założyłeś konto na World Cup 2018!</h2>

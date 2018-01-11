@@ -18,7 +18,8 @@ session_start();
 <div class="container text-center">
     <h1>World Cup 2018 - stwórz darmowe konto</h1>
     <div class="row">
-        <h4>Masz konto? <a href="loginForm.php" class="btn btn-info links">Zaloguj się</a></h4>
+        <h3>Masz konto?</h3>
+        <h4><a href="loginForm.php" class="btn btn-info links">Zaloguj się</a></h4>
     </div>
     <hr/>
     <form method="POST" action="register.php">
