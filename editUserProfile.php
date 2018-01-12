@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //validate success!!!
         if ($is_ok) {
             $user->setUsername($username);
-            if ($user->updateUsername($connection)) {
+            if (UserRepository::updateUsername($connection, $user)) {
                 echo "<div class=\"text-center alert alert-success\">";
                 echo '<strong>Zmieniono login na ' . $user->getUsername() . '</strong>';
                 echo "</div>";
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //validate success!!!
         if ($is_ok) {
             $user->setEmail($email);
-            if ($user->updateEmail($connection)) {
+            if (UserRepository::updateEmail($connection, $user)) {
                 echo "<div class=\"text-center alert alert-success\">";
                 echo '<strong>Zmieniono adres e-mail na ' . $user->getEmail() . '</strong>';
                 echo "</div>";
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //validate success!!!
         if ($is_ok) {
             $user->setPassword($password);
-            if ($user->updatePassword($connection)) {
+            if (UserRepository::updatePassword($connection, $user)) {
                 echo "<div class=\"text-center alert alert-success\">";
                 echo '<strong>Hasło zostało zmienione!</strong>';
                 echo "</div>";
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['deleteAccount'])) {
-        if ($user->delete($connection)) {
+        if (UserRepository::delete($connection, $user)) {
 
             if (isset($_SESSION['login'])) {
                 unset($_SESSION['login']);

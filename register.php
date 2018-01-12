@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user->setUsername($username)
                 ->setEmail($email)
                 ->setPassword($password);
-            $user->saveToDb($connection);
+            UserRepository::saveToDB($connection, $user);
 
 //            $_SESSION['fr_username'] = $username;
 //            $_SESSION['fr_email'] = $email;

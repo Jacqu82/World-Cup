@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
             //$imageId = $imageRepo->getId();
             $path = 'images/' . $userId . '/';
             if (!file_exists($path)) {
-                mkdir($path);
+                mkdir($path, 0777, true);
             }
             $path .= $filename;
             if(!file_exists($path)) {
