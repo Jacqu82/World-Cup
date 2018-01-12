@@ -32,7 +32,7 @@ if (isset($_SESSION['e_bot'])) {
 <html lang="pl">
 <?php
 
-include 'head.php';
+include 'widget/head.php';
 
 ?>
 <body>

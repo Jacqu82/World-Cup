@@ -79,6 +79,7 @@ class User
             $result->execute();
             if ($result) {
                 $this->id = $connection->lastInsertId();
+                return true;
             } else {
                 die("Connection Error! " . $connection->errorInfo());
             }
@@ -131,6 +132,24 @@ class User
         $result->bindParam('id', $this->id);
         $result->execute();
 
+        return true;
+    }
+
+    public function delete(PDO $connection)
+    {
+        if ($this->id != -1) {
+            $sql = "DELETE FROM users WHERE id = :id";
+            $result = $connection->prepare($sql);
+
+            $result->bindParam('id', $this->id);
+            $result->execute();
+
+            if ($result) {
+                $this->id = -1;
+                return true;
+            }
+            return false;
+        }
         return true;
     }
 }

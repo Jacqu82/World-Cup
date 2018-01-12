@@ -28,10 +28,26 @@ include 'widget/header.php';
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
-    <h3>Id: <?php echo $user->getId(); ?></h3>
+    <hr/>
     <h3>Witaj <?php echo $user->getUsername(). "!"; ?></h3>
-    <h3>Adres E-mail: <?php echo $user->getEmail(); ?></h3>
+    <h3>Twój adres E-mail: <?php echo $user->getEmail(); ?></h3>
+    <h3><a href="addImage.php" class="btn btn-success links">Dodaj zdjęcia</a></h3>
     <h3><a href="editUserProfile.php" class="btn btn-warning links">Edytuj profil</a></h3>
+
+    <?php
+
+    $images = ImageRepository::loadImageByUserId($connection, $user->getId());
+    foreach ($images as $image) {
+        echo "
+        <div class='img-thumbnail1'>
+            <img src='" . $image . "' width='450' height='350'/>
+        </div>
+        ";
+    }
+
+
+    ?>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"

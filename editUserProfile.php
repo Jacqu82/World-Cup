@@ -108,13 +108,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         //validate success!!!
-        if($is_ok) {
+        if ($is_ok) {
             $user->setPassword($password);
             if ($user->updatePassword($connection)) {
                 echo "<div class=\"text-center alert alert-success\">";
                 echo '<strong>Hasło zostało zmienione!</strong>';
                 echo "</div>";
             }
+        }
+    }
+
+    if (isset($_POST['deleteAccount'])) {
+        if ($user->delete($connection)) {
+
+            if (isset($_SESSION['login'])) {
+                unset($_SESSION['login']);
+            }
+            $_SESSION['delete_account'] = "Twoje konto zostało usunięte!";
+            header('Location: index.php');
         }
     }
 
@@ -139,32 +150,32 @@ include 'widget/header.php';
     <div class="container" align="center">
         <form action="#" method="post">
             <h3>Edycja profilu</h3>
-            <div class="form-group">
                 <p class="text-primary">Zmień login:</p>
-                <div>
+                <div class="form-group">
                     <input type="text" class="forms" name="username" placeholder="Login"
-                    value="<?php echo $user->getUsername(); ?>">
+                           value="<?php echo $user->getUsername(); ?>">
                     <br>
-                    <button type="submit" name="userSubmit" class="btn btn-warning">Zmień</button>
+                    <button type="submit" name="userSubmit" class="btn btn-warning links">Zmień</button>
                 </div>
-            </div>
             <hr/>
-            <div>
                 <p class="text-primary">Aktualizuj adres E-mail:</p>
                 <div class="form-group">
                     <input type="email" class="forms" name="email" placeholder="E-mail"
                            value="<?php echo $user->getEmail(); ?>">
                     <br>
-                    <button type="submit" name="emailSubmit" class="btn btn-warning">Zmień</button>
+                    <button type="submit" name="emailSubmit" class="btn btn-warning links">Zmień</button>
                 </div>
-            </div>
             <hr/>
-            <div>
                 <p class="text-primary">Zmień hasło:</p>
                 <div class="form-group">
                     <input type="password" class="forms" name="password" placeholder="Hasło">
                     <br>
-                    <button type="submit" name="passSubmit" class="btn btn-warning">Zmień</button>
+                    <button type="submit" name="passSubmit" class="btn btn-warning links">Zmień</button>
+                </div>
+            <hr/>
+            <div>
+                <div class="form-group">
+                    <button type="submit" name="deleteAccount" class="btn btn-danger links">Usuń konto</button>
                 </div>
             </div>
         </form>
