@@ -1,8 +1,8 @@
 <?php
 
-require_once 'connection.php';
+require_once '../connection.php';
 require_once 'autoload.php';
-require_once 'src/lib.php';
+require_once '../src/lib.php';
 
 session_start();
 
@@ -137,12 +137,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pl">
 <?php
 
-include 'widget/head.php';
+include '../widget/head.php';
 
 ?>
 <body>
 <?php
-include 'widget/header.php';
+include '../widget/header.php';
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
@@ -181,9 +181,9 @@ include 'widget/header.php';
         </form>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-<script src="js/bootstrap.js"></script>
+<?php
+include '../widget/footer.php';
+include '../widget/scripts.php';
+?>
 </body>
 </html>

@@ -10,8 +10,8 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>World Cup 2018 - Rejestracja</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <link href="../css/style.css" rel="stylesheet">
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
@@ -71,9 +71,9 @@ session_start();
         </div>
     </form>
 </div>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-crossorigin="anonymous"></script>
-<script src="js/bootstrap.js"></script>
+<?php
+include '../widget/footer.php';
+include '../widget/scripts.php';
+?>
 </body>
 </html>

@@ -8,7 +8,7 @@ session_start();
 <html lang="pl">
 <?php
 
-include 'widget/head.php';
+include '../widget/head.php';
 
 ?>
 <body>
@@ -43,10 +43,9 @@ include 'widget/head.php';
         <h4><a href="registerForm.php" class="btn btn-info links">Zarejestruj się</a></h4>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-<script src="js/bootstrap.js"></script>
+<?php
+include '../widget/footer.php';
+include '../widget/scripts.php';
+?>
 </body>
 </html>

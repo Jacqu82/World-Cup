@@ -1,9 +1,33 @@
 <?php
 
-//require_once 'autoload.php';
 
 class UserRepository
 {
+
+    public static function loadSql(PDO $connection)
+    {
+        $sql = "SELECT * FROM users";
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->execute();
+        $array = [];
+        if ($result->rowCount() > 0) {
+//            foreach ($result as $row) {
+//                return $row;
+//            }
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $array[] = $row;
+            }
+            return $array;
+        }
+
+        return false;
+    }
+
+
     public static function saveToDB(PDO $connection, User $user)
     {
         $id = $user->getId();
@@ -20,13 +44,9 @@ class UserRepository
             $result->bindParam('password', $password, PDO::PARAM_STR);
 
             $result->execute();
-            if ($result) {
-                //last insert id!!!!!
-                $id = $connection->lastInsertId();
-                return true;
-            } else {
-                die("Connection Error! " . $connection->errorInfo());
-            }
+            //last insert id!!!!!
+            $id = $connection->lastInsertId();
+            return true;
         }
         return false;
     }
@@ -128,7 +148,8 @@ class UserRepository
                 ->setId($row['id'])
                 ->setUsername($row['username'])
                 ->setEmail($row['email'])
-                ->setHash($row['password']);
+                ->setHash($row['password'])
+                ->setCreatedAt($row['created_at']);
             return $user;
         }
 
@@ -184,8 +205,28 @@ class UserRepository
                 ->setId($row['id'])
                 ->setUsername($row['username'])
                 ->setEmail($row['email'])
-                ->setHash($row['password']);
+                ->setHash($row['password'])
+                ->setCreatedAt($row['created_at']);
             return $user;
+        }
+
+        return false;
+    }
+
+    public static function loadUsersExceptMe(PDO $connection, $userId)
+    {
+        $sql = "SELECT id, username FROM users WHERE id <> :user_id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        $userArray = [];
+        if ($result->rowCount() > 0) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $userArray[] = $row;
+            }
+            return $userArray;
         }
 
         return false;

@@ -5,13 +5,14 @@ class Image
 {
     private $id;
     private $imagePath;
-    private $userId = null;
+    private $userId;
+    private $createdAt;
     
     public function __construct()
     {
         $this->id = -1;
         $this->imagePath = '';
-        $this->userId = -1;
+        $this->userId = null;
     }
 
     /**
@@ -66,5 +67,23 @@ class Image
     public function getUserId()
     {
         return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param string $createdAt
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
     }
 }

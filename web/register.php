@@ -2,9 +2,8 @@
 
 session_start();
 
-require_once 'connection.php';
+require_once '../connection.php';
 require_once 'autoload.php';
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])) {
@@ -26,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $users = UserRepository::loadAllUsersByUsername($connection, $username);
         if ($users->rowCount() > 0) {
             $is_ok = false;
-            $_SESSION['e_username'] = 'Login ' . $_POST['username']. ' już znajduje się w bazie danych! Wybierz inny!';
+            $_SESSION['e_username'] = 'Login ' . $_POST['username'] . ' już znajduje się w bazie danych! Wybierz inny!';
             header('Location: registerForm.php');
         }
 
@@ -74,14 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //validate_success!
         if ($is_ok) {
             $user = new User();
-            $user->setUsername($username)
+            $user
+                ->setUsername($username)
                 ->setEmail($email)
                 ->setPassword($password);
             UserRepository::saveToDB($connection, $user);
-
-//            $_SESSION['fr_username'] = $username;
-//            $_SESSION['fr_email'] = $email;
-//            $_SESSION['fr_password'] = $password
 
             $_SESSION['register_success'] = true;
             header('Location: registerSuccess.php');
@@ -91,5 +87,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
-
-

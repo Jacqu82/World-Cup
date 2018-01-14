@@ -7,6 +7,7 @@ class User
     private $username;
     private $email;
     private $password;
+    private $createdAt;
 
     public function __construct()
     {
@@ -14,6 +15,7 @@ class User
         $this->username = '';
         $this->email = '';
         $this->password = '';
+        $this->createdAt = '';
     }
 
     public function setId($id)
@@ -64,5 +66,16 @@ class User
     {
         $this->password = $hash;
         return $this;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

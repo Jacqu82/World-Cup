@@ -1,7 +1,7 @@
 <?php
 
-require_once 'src/lib.php';
-require_once 'connection.php';
+require_once '../src/lib.php';
+require_once '../connection.php';
 
 session_start();
 if (!isset($_SESSION['login'])) {
@@ -20,12 +20,12 @@ $user = loggedUser($connection);
 <html lang="pl">
 <?php
 
-include 'widget/head.php';
+include '../widget/head.php';
 
 ?>
 <body>
 <?php
-include 'widget/header.php';
+include '../widget/header.php';
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
             $filename = $_FILES['imageFile']['name'];
 //            $imageRepo = ImageRepository::loadImageByUserId($connection, $user->getId());
             //$imageId = $imageRepo->getId();
-            $path = 'images/' . $userId . '/';
+            $path = '../images/' . $userId . '/';
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
@@ -92,10 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
 ?>
     <h3><a href="userPanel.php" class="btn btn-primary links">Przejdź do profilu</a></h3>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-<script src="js/bootstrap.js"></script>
+<?php
+include '../widget/footer.php';
+include '../widget/scripts.php';
+?>
 </body>
 </html>

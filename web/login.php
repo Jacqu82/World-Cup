@@ -1,6 +1,6 @@
 <?php
 
-require_once 'connection.php';
+require_once '../connection.php';
 require_once 'autoload.php';
 
 session_start();
@@ -17,9 +17,6 @@ if (isset($_POST['username']) || isset($_POST['password'])) {
     if (password_verify($password, $user->getPassword())) {
         $_SESSION['login'] = true;
         $_SESSION['id'] = $user->getId();
-        $_SESSION['username'] = $user->getUsername();
-        $_SESSION['email'] = $user->getEmail();
-        $_SESSION['password'] = $user->getPassword();
 
         unset($_SESSION['error']);
         header('Location: mainPage.php');
