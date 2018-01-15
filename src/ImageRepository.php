@@ -42,28 +42,30 @@ class ImageRepository
         return $pathArray;
     }
 
-
-//    public static function updateImage(PDO $connection, $userId)//to delete
-//    {
-//        $sql = "UPDATE images SET image_path WHERE user_id = :user_id";
-//
-//        $result = $connection->prepare($sql);
-//        if (!$result) {
-//            die("Query Error!" . $connection->errorInfo());
-//        }
-//
-//        $result->bindParam('user_id', $userId);
-//        $result->execute();
-//
-//        return true;
-//    }
-
-    public static function delete(PDO $connection, $id)
+    public static function loadImagePath(PDO $connection, $userId)
     {
-
-        $sql = "DELETE FROM images WHERE id = :id";
+        $sql = "SELECT image_path FROM images WHERE user_id = :user_id";
 
         $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $path = $row['image_path'];
+        }
+        return $path;
+    }
+
+    public static function loadImageById(PDO $connection, $id)
+    {
+        $sql = "SELECT * FROM images WHERE id = :id";
+
+        $result = $connection->prepare($sql);
+
         if (!$result) {
             die("Query Error!" . $connection->errorInfo());
         }
@@ -71,6 +73,38 @@ class ImageRepository
         $result->bindParam('id', $id);
         $result->execute();
 
+        if ($result->rowCount() > 0) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $image = new Image();
+            $image
+                ->setId($row['id'])
+                ->setImagePath($row['image_path'])
+                ->setUserId($row['user_id'])
+                ->setCreatedAt($row['created_at']);
+
+            return $image;
+        }
+
+        return false;
+    }
+
+    public static function delete(PDO $connection, Image $image)
+    {
+        $id = $image->getId();
+
+        if ($id != -1) {
+            $sql = "DELETE FROM images WHERE id = :id";
+            $result = $connection->prepare($sql);
+
+            $result->bindParam('id', $id);
+            $result->execute();
+
+            if ($result) {
+                $id = -1;
+                return true;
+            }
+            return false;
+        }
         return true;
     }
 }

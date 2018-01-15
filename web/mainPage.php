@@ -31,10 +31,10 @@ include '../widget/header.php';
 
     <?php
 
-    $array = UserRepository::loadSql($connection);
-    foreach ($array as $row) {
-        var_dump($row['username']);
-    }
+//    $array = UserRepository::loadSql($connection);
+//    foreach ($array as $row) {
+//        var_dump($row['username']);
+//    }
 
     ?>
 

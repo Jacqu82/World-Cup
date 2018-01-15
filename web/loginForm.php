@@ -42,6 +42,7 @@ include '../widget/head.php';
         <h3>Nie masz konta?</h3>
         <h4><a href="registerForm.php" class="btn btn-info links">Zarejestruj się</a></h4>
     </div>
+    <a href="index.php" class="btn btn-default links">Powrót</a>
 </div>
 <?php
 include '../widget/footer.php';

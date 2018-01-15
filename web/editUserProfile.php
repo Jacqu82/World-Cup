@@ -179,6 +179,8 @@ include '../widget/header.php';
                 </div>
             </div>
         </form>
+        <hr/>
+        <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
     </div>
 </div>
 <?php

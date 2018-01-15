@@ -12,7 +12,6 @@ if (!isset($_SESSION['login'])) {
 //if for every page for logged user!!!
 
 $user = loggedUser($connection);
-//$imageRepo = getImageId($connection);
 
 ?>
 
@@ -30,39 +29,34 @@ include '../widget/header.php';
 <div class="container text-center">
     <h1>World Cup 2018</h1>
     <hr/>
-    <form method="post" action="addImage.php" enctype="multipart/form-data">
+    <form method="POST" action="#" enctype="multipart/form-data">
         <div class="file forms">
             <input type="file" name="imageFile"/>
             <input type="hidden" name="userId" value="<?php echo $user->getId(); ?>"/>
-        </div><br/>
-        <input type="hidden" name="action" value="saveImage" />
+        </div>
+        <br/>
+        <input type="hidden" name="action" value="saveImage"/>
         <button type="submit">Dodaj zdjęcie</button>
     </form>
 
-<?php
+    <?php
 
-//$imageRepo = ImageRepository::loadImageByUserId($connection, $user->getId());
-//var_dump($imageRepo);
-//$_SESSION['image_id'] = $imageRepo->getId();
-//var_dump($_SESSION['image_id']);
-//$imageRepo = ImageRepository::getImageId($connection, $user->getId());
-//var_dump($imageRepo);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
-    if (($_FILES['imageFile']['error'] == 0)
-        && ($_FILES['imageFile']['type'] == 'image/jpeg')
-        && isset($_POST['userId'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
+        if (($_FILES['imageFile']['error'] == 0)
+            && ($_FILES['imageFile']['type'] == 'image/jpeg')
+            && isset($_POST['userId'])) {
             $userId = $_POST['userId'];
-            //$filename = $_FILES['imageFile']['name'] = '_image';
+            //$filename = $_FILES['imageFile']['name'] = $imageId . '_image';
             $filename = $_FILES['imageFile']['name'];
-//            $imageRepo = ImageRepository::loadImageByUserId($connection, $user->getId());
-            //$imageId = $imageRepo->getId();
-            $path = '../images/' . $userId . '/';
+            $path = '../content/' . $userId . '/';
+//            $chmod = '../content';
             if (!file_exists($path)) {
-                mkdir($path, 0777, true);
+                mkdir($path);
+//                chmod($chmod, 0777);
+//                chmod($path, 0777);
             }
             $path .= $filename;
-            if(!file_exists($path)) {
+            if (!file_exists($path)) {
                 $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
             } else {
                 echo "<div class=\"text-center alert alert-danger\">";
@@ -73,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
             if ($upload) {
                 $image = new Image();
                 $image
-//                    ->setId($imageId)
                     ->setImagePath($path)
                     ->setUserId($_POST['userId']);
                 $upload = ImageRepository::saveToDB($connection, $image);
@@ -86,11 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
                 echo "</div>";
                 die();
             }
+        }
     }
-}
 
-?>
-    <h3><a href="userPanel.php" class="btn btn-primary links">Przejdź do profilu</a></h3>
+    ?>
+    <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

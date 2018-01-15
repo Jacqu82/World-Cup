@@ -17,7 +17,7 @@ $user = loggedUser($connection);
 <!--                    <li><a href="{{ path('place_show_all') }}">Piękne miejsca</a></li>-->
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <?php if ($user->getUsername() === 'root') {
+                    <?php if ($user->getUsername() === 'admin') {
                         echo '<li><a href="../web/adminPanel.php">Admin Panel</a></li>';
                     } ?>
                     <li style="margin-top: 15px">Zalogowany jako:
@@ -25,7 +25,6 @@ $user = loggedUser($connection);
                         <a class="user" href="../web/userPanel.php">
                             <?php
                             echo $user->getUsername();
-                            //echo $_SESSION['username'];
                             ?>
                         </a>
                     </li>

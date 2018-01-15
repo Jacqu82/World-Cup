@@ -40,11 +40,8 @@ include '../widget/header.php';
 
         ?>
         <div class='img-thumbnail1'>
-            <img src="  <?php echo $image['image_path']; ?> " width='450' height='350'/>
-        </div>
-        <div>
-<!--            <span>--><?php //echo $image['id']  ?><!--</span><br/>-->
-            <span>Data dodania: <?php echo $image['created_at']  ?></span>
+            <img src="  <?php echo $image['image_path']; ?> " width='450' height='300'/><br/>
+            <span>Data dodania: <?php echo $image['created_at'] ?></span>
         </div>
 
         <?php
@@ -54,7 +51,9 @@ include '../widget/header.php';
 
     <h3><a href="addImage.php" class="btn btn-success links">Dodaj zdjęcia</a></h3>
     <h3><a href="editUserProfile.php" class="btn btn-warning links">Edytuj profil</a></h3>
-    <h3><a href="editImages.php" class="btn btn-warning links">Edytuj zdjęcia</a></h3>
+    <h3><a href="editImages.php" class="btn btn-primary links">Edytuj zdjęcia</a></h3>
+    <hr/>
+    <h3><a href="mainPage.php" class="btn btn-default links">Powrót do Strony głównej</a></h3>
 
 </div>
 <?php

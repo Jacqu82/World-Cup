@@ -7,7 +7,7 @@ class Image
     private $imagePath;
     private $userId;
     private $createdAt;
-    
+
     public function __construct()
     {
         $this->id = -1;

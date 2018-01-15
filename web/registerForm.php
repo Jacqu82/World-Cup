@@ -70,6 +70,7 @@ session_start();
             <button type="submit" class="btn btn-success button">Zarejestruj się</button>
         </div>
     </form>
+    <a href="index.php" class="btn btn-default links">Powrót</a>
 </div>
 <?php
 include '../widget/footer.php';

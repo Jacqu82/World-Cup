@@ -74,7 +74,7 @@ include '../widget/header.php';
     }
 
     ?>
-
+    <a href="messageSite.php" class="btn btn-default links">Powrót</a>
 </div>
 <?php
 include '../widget/footer.php';

@@ -88,10 +88,12 @@ class MessageRepository
         if ($result->rowCount() > 0) {
             $row = $result->fetch(PDO::FETCH_ASSOC);
             $message = new Message();
-            $message->setId($row['id']);
-            $message->setReceiverId($row['receiver_id']);
-            $message->setSenderId($row['sender_id']);
-            $message->setText($row['text']);
+            $message
+                ->setId($row['id'])
+                ->setReceiverId($row['receiver_id'])
+                ->setSenderId($row['sender_id'])
+                ->setText($row['text'])
+                ->setCreatedAt($row['created_at']);
 
             return $message;
         }

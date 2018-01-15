@@ -33,85 +33,84 @@ include '../widget/header.php';
     <?php
 
     $images = ImageRepository::loadImageDetailsByUserId($connection, $user->getId());
-//    $id = ImageRepository::loadImageIdByUserId($connection, $user->getId());
-//    var_dump($id);
+    foreach ($images as $photo) {
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
+        if (isset($_POST['delete_image']) && isset($_POST['image_id'])) {
+            $imageId = $_POST['image_id'];
+            $path = ImageRepository::loadImagePath($connection, $user->getId());
+            unlink($path);
+            $toDelete = ImageRepository::loadImageById($connection, $imageId);
+            ImageRepository::delete($connection, $toDelete);
+            header('Location: editImages.php');
+        }
 
-    foreach ($images as $image) {
+        if (($_FILES['imageFile']['error'] == 0) && ($_FILES['imageFile']['type'] == 'image/jpeg')
+            && isset($_POST['userId']) && isset($_POST['image_id'])) {
+            $imageId = $_POST['image_id'];
+            $userId = $_POST['userId'];
 
-    ?>
+            $pathToDelete = ImageRepository::loadImagePath($connection, $user->getId());
+            unlink($pathToDelete);
+            $toDelete = ImageRepository::loadImageById($connection, $imageId);
+            ImageRepository::delete($connection, $toDelete);
 
-        <div class='img-thumbnail1'>
-            <img src="<?php echo $image['image_path'] ?> " width='450' height='350'/>
-            <form method="post" action="#" enctype="multipart/form-data">
-                <div class="file forms">
-                    <input type="file" name="imageFile"/>
-                    <input type="hidden" name="userId" value="<?php echo $user->getId(); ?>"/>
-                </div>
-                <br/>
-                <input type="hidden" name="action" value="saveImage"/>
-                <button type="submit" class="btn btn-warning links">Edytuj zdjęcie</button>
-            </form>
-            <div>
-                <div class="form-group">
-                    <button type="submit" name="deleteImage" class="btn btn-danger links">Usuń zdjęcie</button>
-                </div>
-            </div>
-        </div>
-    <?php
-
-//        if (isset($_POST['deleteImage'])) {
-//            if (ImageRepository::delete($connection)) {
-//
-//            }
-//        }
-
-//        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
-//            if (($_FILES['imageFile']['error'] == 0)
-//                && ($_FILES['imageFile']['type'] == 'image/jpeg')
-//                && isset($_POST['userId'])) {
-//                $userId = $_POST['userId'];
-//                $filename = $_FILES['imageFile']['name'];
-//                $path = 'images/' . $userId . '/';
-//                if (!file_exists($path)) {
-//                    mkdir($path, 0777, true);
-//                }
-//                $path .= $filename;
-//                if(!file_exists($path)) {
-//                    $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
-//                } else {
-//                    echo "<div class=\"text-center alert alert-danger\">";
-//                    echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
-//                    echo "</div>";
-//                    die();
-//                }
-//                if ($upload) {
-//                    //$image = new Image();
-//                    $image->setImagePath($path);
-//                    if (ImageRepository::updateImage($connection, $userId)) {
-//                        echo "<div class=\"text-center alert alert-success\">";
-//                        echo '<strong>Zdjęcie zmienione pomyślnie :)</strong>';
-//                        echo "</div>";
-//                    }
-////                    $image = new Image();
-////                    $image
-////                        ->setImagePath($path)
-////                        ->setUserId($_POST['userId']);
-////                    $upload = ImageRepository::saveToDB($connection, $image);
-//
-//                } else {
-//                    echo "<div class=\"text-center alert alert-danger\">";
-//                    echo '<strong>Wystąpił błąd podczas dodawania zdjęcia!</strong>';
-//                    echo "</div>";
-//                    die();
-//                }
-//            }
-//        }
-
+            $filename = $_FILES['imageFile']['name'];
+            $path = '../content/' . $userId . '/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path .= $filename;
+            if(!file_exists($path)) {
+                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
+            } else {
+                echo "<div class=\"text-center alert alert-danger\">";
+                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
+                echo "</div>";
+                die();
+            }
+            if ($upload) {
+                $image = new Image();
+                $image
+                    ->setImagePath($path)
+                    ->setUserId($_POST['userId']);
+                $upload = ImageRepository::saveToDB($connection, $image);
+                header('Location: editImages.php');
+            } else {
+                echo "<div class=\"text-center alert alert-danger\">";
+                echo '<strong>Wystąpił błąd podczas edycji zdjęcia!</strong>';
+                echo "</div>";
+                die();
+            }
+        }
     }
 
     ?>
 
+        <div class='img-thumbnail1'>
+            <img src="<?php echo $photo['image_path'] ?> " width='450' height='300'/>
+            <form method="POST" action="#" enctype="multipart/form-data">
+                <div class="file forms">
+                    <input type="file" name="imageFile"/>
+                    <input type="hidden" name="userId" value="<?php echo $user->getId(); ?>"/>
+                    <input type="hidden" name="image_id" value="<?php echo $photo['id'];; ?>"/>
+                </div>
+                <br/>
+                <input type="hidden" name="action" value="saveImage"/>
+                <button type="submit" class="btn btn-warning links">Edytuj zdjęcie</button>
+                <div>
+                    <input type="submit" class="btn btn-danger links" name="delete_image" value="Usuń zdjęcie"/>
+                    <input type='hidden' name='image_id' value="<?php echo $photo['id']; ?> ">
+                </div>
+            </form>
+        </div>
+    <?php
+
+    }
+
+    ?>
+    <hr/>
+    <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

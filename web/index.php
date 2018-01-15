@@ -17,9 +17,7 @@ include '../widget/head.php';
 <body>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
-    <h3><a href="loginForm.php" class="btn btn-primary links">Zaloguj się na swoje konto</a></h3>
-    <h3><a href="registerForm.php" class="btn btn-primary links">Utwórz nowe konto</a></h3>
-
+    <hr/>
     <?php
     if (isset($_SESSION['delete_account'])) {
         echo "<div class=\"text-center alert alert-success\">";
@@ -28,6 +26,13 @@ include '../widget/head.php';
         unset($_SESSION['delete_account']);
     }
     ?>
+
+    <h3><a href="loginForm.php" class="btn btn-primary links">Zaloguj się na swoje konto</a></h3>
+    <h3><a href="registerForm.php" class="btn btn-primary links">Utwórz nowe konto</a></h3>
+    <div>
+        <img src="../images/world_cup.jpeg" width="500" height="300" />
+    </div>
+    <hr/>
 </div>
 <?php
 include '../widget/footer.php';

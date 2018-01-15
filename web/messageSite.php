@@ -79,6 +79,10 @@ include '../widget/header.php';
     ?>
     <a href="inbox.php" class="btn btn-primary links">Skrzynka odbiorcza</a>
     <a href="outbox.php" class="btn btn-info links">Skrzynka nadawcza</a>
+    <div>
+        <a href="mainPage.php" class="btn btn-default links">Powrót</a>
+    </div>
+
 
 </div>
 <?php
