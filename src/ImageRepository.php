@@ -107,4 +107,25 @@ class ImageRepository
         }
         return true;
     }
+
+    public static function countAllImagesByUserId(PDO $connection, $userId)
+    {
+        $sql = "SELECT count(id) as count FROM images WHERE user_id = :user_id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['count'];
+            }
+        }
+
+        return false;
+    }
 }

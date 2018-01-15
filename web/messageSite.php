@@ -50,9 +50,9 @@ include '../widget/header.php';
 
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['receiverId']) && isset($_POST['text'])) {
-    $receiverId = (int)$_POST['receiverId'];
-    $text = filter_input(INPUT_POST, 'text', FILTER_SANITIZE_STRING);
+        if (isset($_POST['receiverId']) && isset($_POST['text'])) {
+        $receiverId = (int)$_POST['receiverId'];
+        $text = filter_input(INPUT_POST, 'text', FILTER_SANITIZE_STRING);
 
     $message = new Message();
     $message
@@ -70,24 +70,24 @@ include '../widget/header.php';
                     echo $value['username'];
                 }
             }
-    echo '</strong>
+            echo '</strong>
     </div>';
             }
         }
     }
 
-    ?>
-    <a href="inbox.php" class="btn btn-primary links">Skrzynka odbiorcza</a>
-    <a href="outbox.php" class="btn btn-info links">Skrzynka nadawcza</a>
-    <div>
-        <a href="mainPage.php" class="btn btn-default links">Powrót</a>
+            ?>
+            <a href="inbox.php" class="btn btn-primary links">Skrzynka odbiorcza</a>
+            <a href="outbox.php" class="btn btn-info links">Skrzynka nadawcza</a>
+            <div>
+                <a href="mainPage.php" class="btn btn-default links">Powrót</a>
+            </div>
+
+
     </div>
-
-
-</div>
-<?php
-include '../widget/footer.php';
-include '../widget/scripts.php';
-?>
+    <?php
+    include '../widget/footer.php';
+    include '../widget/scripts.php';
+    ?>
 </body>
 </html>

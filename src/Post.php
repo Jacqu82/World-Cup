@@ -1,28 +1,19 @@
 <?php
 
 
-class Image
+class Post
 {
     private $id;
-    private $imagePath;
     private $userId;
+    private $text;
     private $createdAt;
 
     public function __construct()
     {
         $this->id = -1;
-        $this->imagePath = '';
         $this->userId = -1;
-    }
-
-    /**
-     * @param $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
+        $this->text = '';
+        $this->createdAt = '';
     }
 
     /**
@@ -34,25 +25,25 @@ class Image
     }
 
     /**
-     * @param $imagePath
+     * @param int $id
      * @return $this
      */
-    public function setImagePath($imagePath)
+    public function setId($id)
     {
-        $this->imagePath = $imagePath;
+        $this->id = $id;
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getImagePath()
+    public function getUserId()
     {
-        return $this->imagePath;
+        return $this->userId;
     }
 
     /**
-     * @param $userId
+     * @param int $userId
      * @return $this
      */
     public function setUserId($userId)
@@ -62,11 +53,21 @@ class Image
     }
 
     /**
-     * @return int|null
+     * @return string
      */
-    public function getUserId()
+    public function getText()
     {
-        return $this->userId;
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     * @return $this;
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+        return $this;
     }
 
     /**

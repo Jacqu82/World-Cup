@@ -1,28 +1,21 @@
 <?php
 
 
-class Image
+class Comment
 {
     private $id;
-    private $imagePath;
     private $userId;
+    private $postId;
+    private $text;
     private $createdAt;
 
     public function __construct()
     {
         $this->id = -1;
-        $this->imagePath = '';
         $this->userId = -1;
-    }
-
-    /**
-     * @param $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
+        $this->postId = -1;
+        $this->text = '';
+        $this->createdAt = '';
     }
 
     /**
@@ -34,25 +27,25 @@ class Image
     }
 
     /**
-     * @param $imagePath
+     * @param int $id
      * @return $this
      */
-    public function setImagePath($imagePath)
+    public function setId($id)
     {
-        $this->imagePath = $imagePath;
+        $this->id = $id;
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getImagePath()
+    public function getUserId()
     {
-        return $this->imagePath;
+        return $this->userId;
     }
 
     /**
-     * @param $userId
+     * @param int $userId
      * @return $this
      */
     public function setUserId($userId)
@@ -62,11 +55,39 @@ class Image
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getUserId()
+    public function getPostId()
     {
-        return $this->userId;
+        return $this->postId;
+    }
+
+    /**
+     * @param int $postId
+     * @return $this
+     */
+    public function setPostId($postId)
+    {
+        $this->postId = $postId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     * @return $this
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+        return $this;
     }
 
     /**

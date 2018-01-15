@@ -35,6 +35,9 @@ include '../widget/header.php';
 
     <?php
 
+    $count = ImageRepository::countAllImagesByUserId($connection, $user->getId());
+    echo '<h3>Liczba Twoich zdjęć ( ' . $count . ' )</h3>';
+
     $images = ImageRepository::loadImageDetailsByUserId($connection, $user->getId());
     foreach ($images as $image) {
 
@@ -46,6 +49,17 @@ include '../widget/header.php';
 
         <?php
     }
+    echo '<hr/>';
+
+    $count = PostRepository::countAllPostsByUserId($connection, $user->getId());
+    echo '<h3>Wszystkie Twoje posty ( ' . $count . ' )</h3>';
+    $myPosts = PostRepository::loadAllPostsByUserId($connection, $user->getId());
+    foreach ($myPosts as $post) {
+        echo $post['created_at'] . "<br/>";
+        echo $post['text'] . "<br/><br/>";
+    }
+
+    echo '<hr/>';
 
     ?>
 

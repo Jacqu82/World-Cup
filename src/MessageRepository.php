@@ -121,4 +121,20 @@ class MessageRepository
         return true;
     }
 
+    public static function countAllUnreadMessages(PDO $connection, $userId)
+    {
+        $sql = "SELECT count(id) as unread FROM messages WHERE is_read = 0 AND receiver_id = :user_id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['unread'];
+            }
+        }
+
+        return false;
+    }
 }
