@@ -29,7 +29,7 @@ class CommentRepository
 
     public static function loadAllCommentsByUserId(PDO $connection, $userId)
     {
-        $sql = "SELECT c.text, c.created_at FROM comments c
+        $sql = "SELECT c.id, c.text, c.created_at FROM comments c
                 WHERE user_id = :user_id
                 ORDER BY c.created_at DESC";
 
@@ -100,5 +100,70 @@ class CommentRepository
             }
         }
         return false;
+    }
+
+    public static function updateCommentText(PDO $connection, $id, $text)
+    {
+
+        $sql = "UPDATE comments SET text = :text WHERE id = :id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('text', $text);
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        return $result;
+    }
+
+    public static function loadCommentById(PDO $connection, $id)
+    {
+        $sql = "SELECT * FROM comments WHERE id = :id";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $comment = new Comment();
+            $comment
+                ->setId($row['id'])
+                ->setUserId($row['user_id'])
+                ->setPostId($row['post_id'])
+                ->setText($row['text'])
+                ->setCreatedAt($row['created_at']);
+
+            return $comment;
+        }
+
+        return false;
+    }
+
+    public static function delete(PDO $connection, Comment $comment)
+    {
+        $id = $comment->getId();
+
+        if ($id != -1) {
+            $sql = "DELETE FROM comments WHERE id = :id";
+            $result = $connection->prepare($sql);
+
+            $result->bindParam('id', $id);
+            $result->execute();
+
+            if ($result) {
+                $id = -1;
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 }

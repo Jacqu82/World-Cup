@@ -90,11 +90,12 @@ include '../widget/header.php';
                     <div class="flash-message alert alert-success alert-dismissible" role="alert">
                         <strong>Komentarz pomyślnie dodany :)</strong>
                     </div>
-                    <?php
+                <?php
                 }
             }
         }
     }
+
 
     $count = PostRepository::countAllPosts($connection);
     echo '<h3>Wszystkie posty ( ' . $count . ' )</h3>';
@@ -103,42 +104,8 @@ include '../widget/header.php';
         echo "W dniu " . $post['created_at'] . " użytkownik " . $post['username'] . " napisał: <br/>";
         echo $post['text'] . "<br/><br/>";
 
-//        if ($user->getUsername() === 'admin') {
-//            if (isset($_POST['editText'], $_POST['postSubmit'])) {
-//                $editText = filter_input(INPUT_POST, 'editText', FILTER_SANITIZE_STRING);
-//                if (strlen($editText) > 150) {
-//                    echo '
-//                <div class="flash-message alert alert-success alert-dismissible" role="alert">
-//                    <strong>Post może mieć maksymalnie 150 znaków!</strong>
-//                </div>';
-//                } else {
-//                    $post = new Post();
-//                    $post
-//                        ->setUserId($user->getId())
-//                        ->setText($editText);
-//                    if ($post) {
-//                        PostRepository::updatePostText($connection, $post);
-//                        echo '
-//                        <div class="flash-message alert alert-success alert-dismissible" role="alert">
-//                            <strong>Post pomyślnie edytowany :)</strong>
-//                        </div>';
-//                    }
-//                }
-//            }
-//            ?>
-<!--            <form action="#" method="post">-->
-<!--                <div class="form-group">-->
-<!--                    <textarea class="forms" name="editText"-->
-<!--                              placeholder="Edytuj Post"></textarea>-->
-<!--                    <br/>-->
-<!--                    <button type="submit" name="postSubmit" class="btn btn-warning links">Edytuj Post</button>-->
-<!--                </div>-->
-<!--                <input type='hidden' name='image_id' value="--><?php //?><!-- ">-->
-<!--                <button type="submit" class="btn btn-danger links">Usuń Post</button>-->
-<!--                            <input type="submit" class="btn btn-danger links" name="delete_image" value="Usuń zdjęcie"/>-->
-<!--            </form>-->
-<!--            --><?php
-//        }
+        $users = UserRepository::loadUserById($connection, $user->getId());
+
         ?>
 
         <form action="#" method="POST">
@@ -163,7 +130,6 @@ include '../widget/header.php';
         }
         echo "<hr/>";
     }
-
 
     ?>
 

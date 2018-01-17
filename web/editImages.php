@@ -82,7 +82,7 @@ include '../widget/header.php';
                         <input type="file" name="imageFile"/>
                         <input type="hidden" name="user_id" value="<?php echo $user->getId(); ?>"/>
                         <input type="hidden" name="image_id" value="<?php echo $image['id'];; ?>"/>
-                    </div>
+                </div>
                     <br/>
                     <input type="hidden" name="action" value="updateImage"/>
                     <button type="submit" class="btn btn-warning links">Edytuj zdjęcie</button>

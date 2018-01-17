@@ -51,15 +51,91 @@ include '../widget/header.php';
     }
     echo '<hr/>';
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['editText']) && isset ($_POST['post_id']) && isset($_POST['update_post'])) {
+            $editText = filter_input(INPUT_POST, 'editText', FILTER_SANITIZE_STRING);
+            $postId = $_POST['post_id'];
+            if (strlen($editText) > 150) {
+                echo '
+                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                    <strong>Post może mieć maksymalnie 150 znaków!</strong>
+                </div>';
+            } else {
+                PostRepository::updatePostText($connection, $postId, $editText);
+                echo '
+                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                    <strong>Post pomyślnie edytowany :)</strong>
+                </div>';
+            }
+        }
+
+        if (isset($_POST['post_id']) && isset($_POST['delete_post'])) {
+            $postId = $_POST['post_id'];
+            $postToDelete = PostRepository::loadPostById($connection, $postId);
+            PostRepository::delete($connection, $postToDelete);
+            echo '
+                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                    <strong>Post pomyślnie usynięty :)</strong>
+                </div>';
+        }
+    }
+
     $count = PostRepository::countAllPostsByUserId($connection, $user->getId());
     echo '<h3>Wszystkie Twoje posty ( ' . $count . ' )</h3>';
     $myPosts = PostRepository::loadAllPostsByUserId($connection, $user->getId());
     foreach ($myPosts as $post) {
         echo $post['created_at'] . "<br/>";
         echo $post['text'] . "<br/><br/>";
+
+        ?>
+
+    <form action="#" method="post">
+        <div>
+        <textarea class="forms" name="editText" placeholder="Edytuj Post"></textarea>
+            <br/>
+            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>"/>
+            <input type="hidden" name="update_post"/>
+            <button type="submit" class="btn btn-warning links">Edytuj Post</button>
+        </div>
+    </form>
+    <form action="#" method="post">
+        <input type="submit" class="btn btn-danger links" name="delete_post" value="Usuń Post"/>
+        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>"/>
+    </form>
+
+    <?php
     }
 
     echo '<hr/>';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['editComment']) && isset ($_POST['comment_id']) && isset($_POST['update_comment'])) {
+            $editComment = filter_input(INPUT_POST, 'editComment', FILTER_SANITIZE_STRING);
+            $commentId = $_POST['comment_id'];
+            if (strlen($editComment) > 150) {
+                echo '
+                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                    <strong>Komentarz może mieć maksymalnie 80 znaków!</strong>
+                </div>';
+            } else {
+                CommentRepository::updateCommentText($connection, $commentId, $editComment);
+                echo '
+                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                    <strong>Komentarz pomyślnie edytowany :)</strong>
+                </div>';
+            }
+        }
+
+        if (isset($_POST['comment_id']) && isset($_POST['delete_comment'])) {
+            $commentId = $_POST['comment_id'];
+            $commentToDelete = CommentRepository::loadCommentById($connection, $commentId);
+            CommentRepository::delete($connection, $commentToDelete);
+            echo '
+                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                    <strong>Komentarz pomyślnie usynięty :)</strong>
+                </div>';
+        }
+    }
 
     $countComments = CommentRepository::countAllCommentsByUserId($connection, $user->getId());
     echo '<h3>Wszystkie Twoje komentarze ( ' . $countComments . ' )</h3>';
@@ -67,6 +143,25 @@ include '../widget/header.php';
     foreach ($myComments as $comment) {
         echo $comment['created_at']."<br/>";
         echo $comment['text']."<br/><br/>";
+
+        ?>
+
+    <form action="#" method="post">
+        <div>
+            <textarea class="forms" name="editComment" placeholder="Edytuj Komentarz"></textarea>
+            <br/>
+            <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>"/>
+            <input type="hidden" name="update_comment"/>
+            <button type="submit" class="btn btn-warning links">Edytuj Komentarz</button>
+        </div>
+    </form>
+    <form action="#" method="post">
+        <input type="submit" class="btn btn-danger links" name="delete_comment" value="Usuń Komentarz"/>
+        <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>"/>
+    </form>
+
+    <?php
+
     }
 
     echo '<hr/>';

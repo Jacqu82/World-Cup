@@ -42,7 +42,7 @@ class PostRepository
 
     public static function loadAllPostsByUserId(PDO $connection, $userId)
     {
-        $sql = "SELECT p.text, p.created_at, u.username FROM posts p
+        $sql = "SELECT p.id, p.text, p.created_at, u.username FROM posts p
                 LEFT JOIN users u ON p.user_id = u.id
                 WHERE p.user_id = :user_id
                 ORDER BY created_at DESC";
@@ -99,22 +99,67 @@ class PostRepository
         return false;
     }
 
-    public static function updatePostText(PDO $connection, Post $post)
+    public static function updatePostText(PDO $connection, $id, $text)
     {
-        $id = $post->getId();
-        $text = $post->getText();
 
         $sql = "UPDATE posts SET text = :text WHERE id = :id";
+
         $result = $connection->prepare($sql);
-
-        if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
-        }
-
         $result->bindParam('text', $text);
         $result->bindParam('id', $id);
         $result->execute();
 
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        return $result;
+    }
+
+    public static function loadPostById(PDO $connection, $id)
+    {
+        $sql = "SELECT * FROM posts WHERE id = :id";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $post = new Post();
+            $post
+                ->setId($row['id'])
+                ->setUserId($row['user_id'])
+                ->setText($row['text'])
+                ->setCreatedAt($row['created_at']);
+
+            return $post;
+        }
+
+        return false;
+    }
+
+    public static function delete(PDO $connection, Post $post)
+    {
+        $id = $post->getId();
+
+        if ($id != -1) {
+            $sql = "DELETE FROM posts WHERE id = :id";
+            $result = $connection->prepare($sql);
+
+            $result->bindParam('id', $id);
+            $result->execute();
+
+            if ($result) {
+                $id = -1;
+                return true;
+            }
+            return false;
+        }
         return true;
     }
 }
