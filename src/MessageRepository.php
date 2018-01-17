@@ -98,7 +98,7 @@ class MessageRepository
             return $message;
         }
 
-        return null;
+        return false;
     }
 
     public static function delete(PDO $connection, Message $message)

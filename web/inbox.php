@@ -31,9 +31,6 @@ include '../widget/header.php';
     <h3>Skrzynka odbiorcza</h3>
     <?php
 
-    $unread = MessageRepository::countAllUnreadMessages($connection, $user->getId());
-    echo 'Nieprzyczatane wiadomości: ( ' . $unread . ' )<br/>';
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['set_message_as_read']) && isset($_POST['message_id'])) {
             $id = $_POST['message_id'];
@@ -43,6 +40,9 @@ include '../widget/header.php';
             MessageRepository::setMessageStatus($connection, $id, 0);
         }
     }
+
+    $unread = MessageRepository::countAllUnreadMessages($connection, $user->getId());
+    echo 'Nieprzyczatane wiadomości: ( ' . $unread . ' )<br/>';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['delete_messege']) && isset($_POST['message_id'])) {

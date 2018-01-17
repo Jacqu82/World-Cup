@@ -25,7 +25,7 @@ class ImageRepository
 
     public static function loadImageDetailsByUserId(PDO $connection, $userId)
     {
-        $sql = "SELECT * FROM images WHERE user_id = :user_id";
+        $sql = "SELECT * FROM images WHERE user_id = :user_id ORDER BY created_at DESC";
 
         $result = $connection->prepare($sql);
         if (!$result) {
@@ -42,16 +42,16 @@ class ImageRepository
         return $pathArray;
     }
 
-    public static function loadImagePath(PDO $connection, $userId)
+    public static function loadImagePath(PDO $connection, $id)
     {
-        $sql = "SELECT image_path FROM images WHERE user_id = :user_id";
+        $sql = "SELECT image_path FROM images WHERE id = :id";
 
         $result = $connection->prepare($sql);
         if (!$result) {
             die("Query Error!" . $connection->errorInfo());
         }
 
-        $result->bindParam('user_id', $userId);
+        $result->bindParam('id', $id);
         $result->execute();
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -127,5 +127,21 @@ class ImageRepository
         }
 
         return false;
+    }
+
+    public static function updateImagePath(PDO $connection, $path, $id)
+    {
+        $sql = "UPDATE images SET image_path = :image_path WHERE id = :id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('image_path', $path);
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        return $result;
     }
 }

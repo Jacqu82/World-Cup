@@ -61,6 +61,16 @@ include '../widget/header.php';
 
     echo '<hr/>';
 
+    $countComments = CommentRepository::countAllCommentsByUserId($connection, $user->getId());
+    echo '<h3>Wszystkie Twoje komentarze ( ' . $countComments . ' )</h3>';
+    $myComments = CommentRepository::loadAllCommentsByUserId($connection, $user->getId());
+    foreach ($myComments as $comment) {
+        echo $comment['created_at']."<br/>";
+        echo $comment['text']."<br/><br/>";
+    }
+
+    echo '<hr/>';
+
     ?>
 
     <h3><a href="addImage.php" class="btn btn-success links">Dodaj zdjęcia</a></h3>

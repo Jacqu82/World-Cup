@@ -98,4 +98,23 @@ class PostRepository
 
         return false;
     }
+
+    public static function updatePostText(PDO $connection, Post $post)
+    {
+        $id = $post->getId();
+        $text = $post->getText();
+
+        $sql = "UPDATE posts SET text = :text WHERE id = :id";
+        $result = $connection->prepare($sql);
+
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('text', $text);
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        return true;
+    }
 }

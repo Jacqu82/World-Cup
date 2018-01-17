@@ -154,7 +154,7 @@ include '../widget/header.php';
                 <div class="form-group">
                     <input type="text" class="forms" name="username" placeholder="Login"
                            value="<?php echo $user->getUsername(); ?>">
-                    <br>
+                    <br/>
                     <button type="submit" name="userSubmit" class="btn btn-warning links">Zmień</button>
                 </div>
             <hr/>

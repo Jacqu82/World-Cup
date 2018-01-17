@@ -27,6 +27,23 @@ class CommentRepository
         return false;
     }
 
+    public static function loadAllCommentsByUserId(PDO $connection, $userId)
+    {
+        $sql = "SELECT c.text, c.created_at FROM comments c
+                WHERE user_id = :user_id
+                ORDER BY c.created_at DESC";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        return $result;
+    }
+
     public static function loadAllCommentsByPostId(PDO $connection, $postId)
     {
         $sql = "SELECT c.text, c.created_at, u.username FROM comments c
@@ -60,6 +77,26 @@ class CommentRepository
         if ($result->rowCount() > 0) {
             foreach ($result as $row) {
                 return $row['count'];
+            }
+        }
+        return false;
+    }
+
+    public static function countAllCommentsByUserId(PDO $connection, $userId)
+    {
+        $sql = "SELECT count(id) as countComments FROM comments WHERE user_id = :user_id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['countComments'];
             }
         }
         return false;
