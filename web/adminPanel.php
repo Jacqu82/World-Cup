@@ -2,6 +2,8 @@
 
 require_once '../src/lib.php';
 require_once '../connection.php';
+//require_once '../../src/UserRepository.php';
+//require_once '../../src/User.php';
 
 session_start();
 if (!isset($_SESSION['login'])) {
@@ -32,25 +34,22 @@ include '../widget/header.php';
     <h3>Witaj <?php echo $user->getUsername(). "!"; ?></h3>
     <h3>Panel Administracyjny</h3>
 
-    <?php
+    <a href="addNationalTeam.php" class="btn btn-success links">Dodaj reprezentacje do bazy</a>
+    <a href="addNationalTeamImage.php" class="btn btn-success links">Dodaj zdjęcia reprezentacji</a>
+    <a href="editNationalTeamImages.php" class="btn btn-primary links">Edytuj zdjęcia reprezentacji</a>
 
-//    $images = ImageRepository::loadImagePathByUserId($connection, $user->getId());
-//    foreach ($images as $image) {
-//        echo "
-//        <div class='img-thumbnail1'>
-//            <img src='" . $image . "' width='450' height='350'/>
-//        </div>
-//        ";
-//    }
-
-    ?>
-
-    <h3><a href="addImage.php" class="btn btn-success links">Dodaj zdjęcia</a></h3>
-    <h3><a href="editUserProfile.php" class="btn btn-warning links">Edytuj profil</a></h3>
-    <h3><a href="editImages.php" class="btn btn-warning links">Edytuj zdjęcia</a></h3>
-
+    <hr/>
 </div>
 <?php
+    $groups = GroupRepository::loadAllGroups($connection);
+//    foreach ($groups as $group) {
+//        var_dump($group['name']);
+//    }
+
+//    for ($i = 0; $i < count($groups); $i++) {
+//        var_dump($groups[$i]);
+//    }
+
 include '../widget/footer.php';
 include '../widget/scripts.php';
 ?>

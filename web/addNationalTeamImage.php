@@ -11,8 +11,6 @@ if (!isset($_SESSION['login'])) {
 
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
-
 ?>
 
 <!DOCTYPE html>
@@ -29,14 +27,25 @@ include '../widget/header.php';
 <div class="container text-center">
     <h1>World Cup 2018</h1>
     <hr/>
+
     <form method="POST" action="#" enctype="multipart/form-data">
         <div class="file forms">
             <input type="file" name="imageFile"/>
-            <input type="hidden" name="userId" value="<?php echo $user->getId(); ?>"/>
         </div>
         <br/>
+        <label>Wybierz reprezentacje: <br/>
+            <select name="nationalTeams">
+                <?php
+                $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
+                foreach ($nationalTeams as $nationalTeam) {
+                    echo "<option value='" . $nationalTeam['id'] . "' class='forms'>" . $nationalTeam['name'] . "</option>";
+                }
+                ?>
+            </select>
+        </label>
+        <br/>
         <input type="hidden" name="action" value="saveImage"/>
-        <button type="submit">Dodaj zdjęcie</button>
+        <button type="submit">Dodaj zdjęcie reprezentacji</button>
     </form>
 
     <?php
@@ -44,16 +53,12 @@ include '../widget/header.php';
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'saveImage') {
         if (($_FILES['imageFile']['error'] == 0)
             && ($_FILES['imageFile']['type'] == 'image/jpeg')
-            && isset($_POST['userId'])) {
-            $userId = $_POST['userId'];
-            //$filename = $_FILES['imageFile']['name'] = $imageId . '_image';
+            && isset($_POST['nationalTeams'])) {
+            $nationalTeamId = $_POST['nationalTeams'];
             $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/users/' . $userId . '/';
-//            $chmod = '../content';
+            $path = '../content/images/teams/' . $nationalTeamId . '/';
             if (!file_exists($path)) {
                 mkdir($path);
-//                chmod($chmod, 0777);
-//                chmod($path, 0777);
             }
             $path .= $filename;
             if (!file_exists($path)) {
@@ -68,7 +73,7 @@ include '../widget/header.php';
                 $image = new Image();
                 $image
                     ->setImagePath($path)
-                    ->setUserId($_POST['userId']);
+                    ->setNationalTeamId($_POST['nationalTeams']);
                 $upload = ImageRepository::saveToDB($connection, $image);
                 echo "<div class=\"text-center alert alert-success\">";
                 echo '<strong>Zdjęcie dodane pomyślnie :)</strong>';
@@ -83,7 +88,7 @@ include '../widget/header.php';
     }
 
     ?>
-    <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
+    <h3><a href="adminPanel.php" class="btn btn-default links">Powrót do panelu Admina</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

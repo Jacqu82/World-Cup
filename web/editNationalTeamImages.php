@@ -7,7 +7,6 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 //if for every page for logged user!!!
-$user = loggedUser($connection);
 ?>
 
 <!DOCTYPE html>
@@ -32,19 +31,19 @@ include '../widget/header.php';
             unlink($path);
             $toDelete = ImageRepository::loadImageById($connection, $imageId);
             ImageRepository::delete($connection, $toDelete);
-            header('Location: editImages.php');
+            header('Location: editNationalTeamImages.php');
         }
 
         if (($_FILES['imageFile']['error'] == 0) && ($_FILES['imageFile']['type'] == 'image/jpeg')
-            && isset($_POST['user_id']) && isset($_POST['image_id'])) {
+            && isset($_POST['image_id'])) {
             $imageId = $_POST['image_id'];
-            $userId = $_POST['user_id'];
+            $nationalTeamId = $_POST['national_team_id'];
 
             $pathToDelete = ImageRepository::loadImagePath($connection, $imageId);
             unlink($pathToDelete);
 
             $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/users/' . $userId . '/';
+            $path = '../content/images/teams/' . $nationalTeamId . '/';
             if (!file_exists($path)) {
                 mkdir($path);
             }
@@ -60,7 +59,7 @@ include '../widget/header.php';
 
             if ($upload) {
                 ImageRepository::updateImagePath($connection, $path, $imageId);
-                header('Location: editImages.php');
+                header('Location: editNationalTeamImages.php');
             } else {
                 echo "<div class=\"text-center alert alert-danger\">";
                 echo '<strong>Wystąpił błąd podczas edycji zdjęcia!</strong>';
@@ -70,36 +69,33 @@ include '../widget/header.php';
         }
     }
 
-    $images = ImageRepository::loadImageDetailsByUserId($connection, $user->getId());
-    if (count($images) != 0) {
-        foreach ($images as $image) {
+    $images = ImageRepository::loadNationalTeamImageDetails($connection);
+    foreach ($images as $image) {
 
-            ?>
-            <div class='img-thumbnail1'>
-                <img src="<?php echo $image['image_path'] ?> " width='450' height='300'/>
-                <form method="POST" action="#" enctype="multipart/form-data">
-                    <div class="file forms">
-                        <input type="file" name="imageFile"/>
-                        <input type="hidden" name="user_id" value="<?php echo $user->getId(); ?>"/>
-                        <input type="hidden" name="image_id" value="<?php echo $image['id'];; ?>"/>
+        ?>
+        <div class='img-thumbnail1'>
+            <img src="<?php echo $image['image_path'] ?> " width='450' height='300'/><br/>
+            <span><?php echo $image['image_path'] ?></span>
+            <form method="POST" action="#" enctype="multipart/form-data">
+                <div class="file forms">
+                    <input type="file" name="imageFile"/>
+                    <input type="hidden" name="national_team_id" value="<?php echo $image['national_team_id']; ?>"/>
+                    <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>"/>
                 </div>
-                    <br/>
-                    <input type="hidden" name="action" value="updateImage"/>
-                    <button type="submit" class="btn btn-warning links">Edytuj zdjęcie</button>
-                    <div>
-                        <input type="submit" class="btn btn-danger links" name="delete_image" value="Usuń zdjęcie"/>
-                        <input type='hidden' name='image_id' value="<?php echo $image['id']; ?> ">
-                    </div>
-                </form>
-            </div>
-            <?php
-        }
-    } else {
-        echo '<h3>Brak zdjęć do edycji!</h3>';
+                <br/>
+                <input type="hidden" name="action" value="updateImage"/>
+                <button type="submit" class="btn btn-warning links">Edytuj zdjęcie</button>
+                <div>
+                    <input type="submit" class="btn btn-danger links" name="delete_image" value="Usuń zdjęcie"/>
+                    <input type='hidden' name='image_id' value="<?php echo $image['id']; ?> ">
+                </div>
+            </form>
+        </div>
+        <?php
     }
     ?>
     <hr/>
-    <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
+    <h3><a href="adminPanel.php" class="btn btn-default links">Powrót do panelu Admina</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

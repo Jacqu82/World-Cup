@@ -30,7 +30,7 @@ include '../widget/head.php';
     <h3><a href="loginForm.php" class="btn btn-primary links">Zaloguj się na swoje konto</a></h3>
     <h3><a href="registerForm.php" class="btn btn-primary links">Utwórz nowe konto</a></h3>
     <div>
-        <img src="../images/world_cup.jpeg" width="500" height="300" />
+        <img src="../images/world_cup.jpeg" width="450" height="300" />
     </div>
     <hr/>
 </div>

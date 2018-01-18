@@ -7,13 +7,16 @@ class ImageRepository
         $id = $image->getId();
         $imagePath = $image->getImagePath();
         $userId = $image->getUserId();
+        $nationalTeamId = $image->getNationalTeamId();
 
         if ($id == -1) {
-            $sql = "INSERT INTO images (image_path, user_id) VALUES (:image_path, :user_id)";
+            $sql = "INSERT INTO images (image_path, user_id, national_team_id) 
+                    VALUES (:image_path, :user_id, :national_team_id)";
 
             $result = $connection->prepare($sql);
             $result->bindParam('image_path', $imagePath);
             $result->bindParam('user_id', $userId);
+            $result->bindParam('national_team_id', $nationalTeamId);
             $result->execute();
 
             $id = $connection->lastInsertId();
@@ -32,14 +35,69 @@ class ImageRepository
             die("Query Error!" . $connection->errorInfo());
         }
 
-        $pathArray = [];
+        $imageArray = [];
         $result->bindParam('user_id', $userId);
         $result->execute();
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $pathArray[] = $row;
+            $imageArray[] = $row;
         }
-        return $pathArray;
+        return $imageArray;
+    }
+
+    public static function loadNationalTeamImageDetails(PDO $connection)
+    {
+        $sql = "SELECT * FROM images WHERE national_team_id IS NOT NULL";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $imageArray = [];
+        $result->execute();
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $imageArray[] = $row;
+        }
+        return $imageArray;
+    }
+
+    public static function loadImageDetailsByNationalTeamId(PDO $connection, $nationalTeamId)
+    {
+        $sql = "SELECT * FROM images WHERE national_team_id = :national_team_id";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $imageNationsArray = [];
+        $result->bindParam('national_team_id', $nationalTeamId);
+        $result->execute();
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $imageNationsArray[] = $row;
+        }
+        return $imageNationsArray;
+    }
+
+    public static function loadFirstImageDetailsByUserId(PDO $connection, $userId)
+    {
+        $sql = "SELECT * FROM images WHERE user_id = :user_id";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            return $row;
+        }
+        return null;
     }
 
     public static function loadImagePath(PDO $connection, $id)

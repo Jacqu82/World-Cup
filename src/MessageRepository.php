@@ -137,4 +137,38 @@ class MessageRepository
 
         return false;
     }
+
+    public static function countAllReceivedMessages(PDO $connection, $userId)
+    {
+        $sql = "SELECT count(id) as received FROM messages WHERE receiver_id = :user_id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['received'];
+            }
+        }
+
+        return false;
+    }
+
+    public static function countAllSentMessages(PDO $connection, $userId)
+    {
+        $sql = "SELECT count(id) as sent FROM messages WHERE sender_id = :user_id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('user_id', $userId);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['sent'];
+            }
+        }
+
+        return false;
+    }
 }

@@ -28,15 +28,17 @@ include '../widget/header.php';
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
-    <div class="row">
-        <form action="#" method="POST">
-            <h3>Napisz Post: </h3>
-
-            <textarea name="text" rows="4" class="forms" placeholder="Napisz Post"
-                      maxlength="150"></textarea><br/>
-            <button class='btn btn-success links' type='submit'>Wyślij Post</button>
-        </form>
+    <hr/>
+    <div>
+        <img src="../images/world_cup.jpeg" width="450" height="300" />
     </div>
+    <form action="#" method="POST">
+        <h3>Napisz Post: </h3>
+
+        <textarea name="text" rows="4" class="forms" placeholder="Napisz Post"
+                  maxlength="150"></textarea><br/>
+        <button class='btn btn-success links' type='submit'>Wyślij Post</button>
+    </form>
 
     <?php
 

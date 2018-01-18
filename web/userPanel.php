@@ -30,6 +30,9 @@ include '../widget/header.php';
     <h1>World Cup 2018</h1>
     <hr/>
     <h3>Witaj <?php echo $user->getUsername() . "!"; ?></h3>
+    <img src="  <?php
+    $firstImage = ImageRepository::loadFirstImageDetailsByUserId($connection, $user->getId());
+    echo $firstImage['image_path']; ?> " width='150' height='100'/><br/>
     <h3>Twój adres E-mail: <?php echo $user->getEmail(); ?></h3>
     <h3>Data utworzenia profilu: <?php echo $user->getCreatedAt(); ?></h3>
 
@@ -89,21 +92,22 @@ include '../widget/header.php';
 
         ?>
 
-    <form action="#" method="post">
-        <div>
-        <textarea class="forms" name="editText" placeholder="Edytuj Post"></textarea>
-            <br/>
+        <form action="#" method="post">
+            <div class="toggle-comment-form">
+                <span class="toggle" style="color: gold">Edytuj</span>
+                <textarea class="commentText forms" name="editText" placeholder="Edytuj Post"></textarea>
+                <br/>
+                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>"/>
+                <input type="hidden" name="update_post"/>
+                <button type="submit" class="btn btn-warning links">Edytuj Post</button>
+            </div>
+        </form>
+        <form action="#" method="post">
+            <input type="submit" class="btn btn-danger links" name="delete_post" value="Usuń Post"/>
             <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>"/>
-            <input type="hidden" name="update_post"/>
-            <button type="submit" class="btn btn-warning links">Edytuj Post</button>
-        </div>
-    </form>
-    <form action="#" method="post">
-        <input type="submit" class="btn btn-danger links" name="delete_post" value="Usuń Post"/>
-        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>"/>
-    </form>
+        </form>
 
-    <?php
+        <?php
     }
 
     echo '<hr/>';
@@ -141,26 +145,27 @@ include '../widget/header.php';
     echo '<h3>Wszystkie Twoje komentarze ( ' . $countComments . ' )</h3>';
     $myComments = CommentRepository::loadAllCommentsByUserId($connection, $user->getId());
     foreach ($myComments as $comment) {
-        echo $comment['created_at']."<br/>";
-        echo $comment['text']."<br/><br/>";
+        echo $comment['created_at'] . "<br/>";
+        echo $comment['text'] . "<br/><br/>";
 
         ?>
 
-    <form action="#" method="post">
-        <div>
-            <textarea class="forms" name="editComment" placeholder="Edytuj Komentarz"></textarea>
-            <br/>
+        <form action="#" method="post">
+            <div class="toggle-comment-form">
+                <span class="toggle" style="color: gold">Edytuj</span>
+                <textarea class="commentText forms" name="editComment" placeholder="Edytuj Komentarz"></textarea>
+                <br/>
+                <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>"/>
+                <input type="hidden" name="update_comment"/>
+                <button type="submit" class="btn btn-warning links">Edytuj Komentarz</button>
+            </div>
+        </form>
+        <form action="#" method="post">
+            <input type="submit" class="btn btn-danger links" name="delete_comment" value="Usuń Komentarz"/>
             <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>"/>
-            <input type="hidden" name="update_comment"/>
-            <button type="submit" class="btn btn-warning links">Edytuj Komentarz</button>
-        </div>
-    </form>
-    <form action="#" method="post">
-        <input type="submit" class="btn btn-danger links" name="delete_comment" value="Usuń Komentarz"/>
-        <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>"/>
-    </form>
+        </form>
 
-    <?php
+        <?php
 
     }
 

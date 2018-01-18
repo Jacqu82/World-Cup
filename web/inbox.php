@@ -28,8 +28,18 @@ include '../widget/header.php';
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
-    <h3>Skrzynka odbiorcza</h3>
     <?php
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['delete_messege']) && isset($_POST['message_id'])) {
+            $messageId = $_POST['message_id'];
+            $message = MessageRepository::loadMessageById($connection, $messageId);
+            MessageRepository::delete($connection, $message);
+        }
+    }
+
+    $countReceived = MessageRepository::countAllReceivedMessages($connection, $user->getId());
+    echo '<h3>Skrzynka odbiorcza ( ' . $countReceived . ' ) </h3>';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['set_message_as_read']) && isset($_POST['message_id'])) {
@@ -43,15 +53,6 @@ include '../widget/header.php';
 
     $unread = MessageRepository::countAllUnreadMessages($connection, $user->getId());
     echo 'Nieprzyczatane wiadomości: ( ' . $unread . ' )<br/>';
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['delete_messege']) && isset($_POST['message_id'])) {
-            $messageId = $_POST['message_id'];
-            $message = MessageRepository::loadMessageById($connection, $messageId);
-            MessageRepository::delete($connection, $message);
-        }
-    }
-
 
     $received = MessageRepository::loadAllReceivedMessagesByUserId($connection, $user->getId());
     foreach ($received as $row) {

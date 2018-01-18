@@ -28,7 +28,6 @@ include '../widget/header.php';
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
-    <h3>Skrzynka nadawcza</h3>
     <?php
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,7 +38,11 @@ include '../widget/header.php';
         }
     }
 
+    $countSent = MessageRepository::countAllSentMessages($connection, $user->getId());
+    echo '<h3>Skrzynka nadawcza ( ' . $countSent . ' ) </h3>';
+
     $sent = MessageRepository::loadAllSentMessagesByUserId($connection, $user->getId());
+
     foreach ($sent as $row) {
         echo 'Do: ' . $row['username'] . "<br/>";
         echo $row['text'] . "<br/>";

@@ -6,13 +6,15 @@ class Image
     private $id;
     private $imagePath;
     private $userId;
+    private $nationalTeamId;
     private $createdAt;
 
     public function __construct()
     {
         $this->id = -1;
         $this->imagePath = '';
-        $this->userId = -1;
+        $this->userId = null;
+        $this->nationalTeamId = null;
     }
 
     /**
@@ -84,6 +86,24 @@ class Image
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNationalTeamId()
+    {
+        return $this->nationalTeamId;
+    }
+
+    /**
+     * @param int $nationalTeamId
+     * @return $this
+     */
+    public function setNationalTeamId($nationalTeamId)
+    {
+        $this->nationalTeamId = $nationalTeamId;
         return $this;
     }
 }
