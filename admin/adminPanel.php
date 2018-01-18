@@ -2,8 +2,6 @@
 
 require_once '../src/lib.php';
 require_once '../connection.php';
-//require_once '../../src/UserRepository.php';
-//require_once '../../src/User.php';
 
 session_start();
 if (!isset($_SESSION['login'])) {
@@ -40,15 +38,8 @@ include '../widget/header.php';
 
     <hr/>
 </div>
-<?php
-    $groups = GroupRepository::loadAllGroups($connection);
-//    foreach ($groups as $group) {
-//        var_dump($group['name']);
-//    }
 
-//    for ($i = 0; $i < count($groups); $i++) {
-//        var_dump($groups[$i]);
-//    }
+<?php
 
 include '../widget/footer.php';
 include '../widget/scripts.php';

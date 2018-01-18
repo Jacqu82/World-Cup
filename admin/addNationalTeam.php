@@ -7,7 +7,7 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 //if for every page for logged user!!!
-$user = loggedUser($connection);
+
 ?>
 
 <!DOCTYPE html>
@@ -42,9 +42,7 @@ include '../widget/header.php';
         }
     }
 
-
     ?>
-
 
     <form method="POST" action="addNationalTeam.php">
         <div>
@@ -60,16 +58,15 @@ include '../widget/header.php';
             </div>
         </div>
         <div>
-            <label>Wybierz grupe: <br/>
-                <select name="groups">
+            Wybierz grupe:<br/>
+                <select name="groups" class="forms">
                     <?php
                     $groups = GroupRepository::loadAllGroups($connection);
                     foreach ($groups as $group) {
-                        echo "<option value='" . $group['id'] . "' class='forms'>" . $group['name'] . "</option>";
+                        echo "<option value='" . $group['id'] . "'>" . $group['name'] . "</option>";
                     }
                     ?>
                 </select>
-            </label>
         </div>
         <div>
             <button type="submit" class="btn btn-success button">Dodaj</button>

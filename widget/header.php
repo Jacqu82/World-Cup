@@ -1,7 +1,5 @@
 <?php
 
-//require_once '../connection.php';
-
 $user = loggedUser($connection);
 
 ?>
@@ -18,10 +16,9 @@ $user = loggedUser($connection);
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php if ($user->getUsername() === 'admin') {
-                        echo '<li><a href="../web/adminPanel.php">Admin Panel</a></li>';
+                        echo '<li><a href="../admin/adminPanel.php">Admin Panel</a></li>';
                     } ?>
                     <li style="margin-top: 15px">Zalogowany jako:
-<!--                        <a style="float: right; margin-top: -15px" href="">-->
                         <a class="user" href="../web/userPanel.php">
                             <?php
                             echo $user->getUsername();

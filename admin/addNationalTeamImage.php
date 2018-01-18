@@ -33,8 +33,8 @@ include '../widget/header.php';
             <input type="file" name="imageFile"/>
         </div>
         <br/>
-        <label>Wybierz reprezentacje: <br/>
-            <select name="nationalTeams">
+        Wybierz reprezentacje:<br/>
+            <select name="nationalTeams" class="forms">
                 <?php
                 $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
                 foreach ($nationalTeams as $nationalTeam) {
@@ -42,7 +42,6 @@ include '../widget/header.php';
                 }
                 ?>
             </select>
-        </label>
         <br/>
         <input type="hidden" name="action" value="saveImage"/>
         <button type="submit">Dodaj zdjęcie reprezentacji</button>
