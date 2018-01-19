@@ -32,7 +32,9 @@ include '../widget/header.php';
             unlink($path);
             $toDelete = ImageRepository::loadImageById($connection, $imageId);
             ImageRepository::delete($connection, $toDelete);
-            header('Location: editImages.php');
+            echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
+            echo '<strong>Zdjęcie poprawnie usunięte :)</strong>';
+            echo "</div>";
         }
 
         if (($_FILES['imageFile']['error'] == 0) && ($_FILES['imageFile']['type'] == 'image/jpeg')
@@ -60,7 +62,9 @@ include '../widget/header.php';
 
             if ($upload) {
                 ImageRepository::updateImagePath($connection, $path, $imageId);
-                header('Location: editImages.php');
+                echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
+                echo '<strong>Zdjęcie poprawnie edytowane :)</strong>';
+                echo "</div>";
             } else {
                 echo "<div class=\"text-center alert alert-danger\">";
                 echo '<strong>Wystąpił błąd podczas edycji zdjęcia!</strong>';
@@ -82,7 +86,7 @@ include '../widget/header.php';
                         <input type="file" name="imageFile"/>
                         <input type="hidden" name="user_id" value="<?php echo $user->getId(); ?>"/>
                         <input type="hidden" name="image_id" value="<?php echo $image['id'];; ?>"/>
-                </div>
+                    </div>
                     <br/>
                     <input type="hidden" name="action" value="updateImage"/>
                     <button type="submit" class="btn btn-warning links">Edytuj zdjęcie</button>

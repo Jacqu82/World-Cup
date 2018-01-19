@@ -13,6 +13,7 @@ if (!isset($_SESSION['login'])) {
 
 $user = loggedUser($connection);
 
+
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +35,10 @@ include '../widget/header.php';
 
     <a href="addNationalTeam.php" class="btn btn-success links">Dodaj reprezentacje do bazy</a>
     <a href="addNationalTeamImage.php" class="btn btn-success links">Dodaj zdjęcia reprezentacji</a>
-    <a href="editNationalTeamImages.php" class="btn btn-primary links">Edytuj zdjęcia reprezentacji</a>
+    <a href="editNationalTeamImages.php" class="btn btn-warning links">Edytuj zdjęcia reprezentacji</a>
+    <a href="managePosts.php" class="btn btn-primary links">Zarządzaj postami</a>
+    <a href="manageComments.php" class="btn btn-info links">Zarządzaj komentarzami</a>
+    <a href="manageImages.php" class="btn btn-primary links">Zarządzaj zdjęciami użytkowników</a>
 
     <hr/>
 </div>

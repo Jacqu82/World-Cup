@@ -10,6 +10,10 @@ if (!isset($_SESSION['login'])) {
 }
 
 //if for every page for logged user!!!
+
+$user = loggedUser($connection);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -21,9 +25,7 @@ include '../widget/head.php';
 ?>
 <body>
 <?php
-
 include '../widget/header.php';
-
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
@@ -46,13 +48,13 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0) && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['image_id'])) {
             $imageId = $_POST['image_id'];
-            $nationalTeamId = $_POST['national_team_id'];
+            $userId = $_POST['user_id'];
 
             $pathToDelete = ImageRepository::loadImagePath($connection, $imageId);
             unlink($pathToDelete);
 
             $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/teams/' . $nationalTeamId . '/';
+            $path = '../content/images/users/' . $userId . '/';
             if (!file_exists($path)) {
                 mkdir($path);
             }
@@ -80,17 +82,17 @@ include '../widget/header.php';
         }
     }
 
-    $images = ImageRepository::loadNationalTeamImageDetails($connection);
+    $images = ImageRepository::loadUsersImageDetails($connection, $user->getId());
     foreach ($images as $image) {
 
         ?>
         <div class='img-thumbnail1'>
             <img src="<?php echo $image['image_path'] ?> " width='450' height='300'/><br/>
-            <span><?php echo $image['image_path'] ?></span>
+            <span><?php echo 'Zdjęcie użytkownika: ' . $image['username'] ?></span>
             <form method="POST" action="#" enctype="multipart/form-data">
                 <div class="file forms">
                     <input type="file" name="imageFile"/>
-                    <input type="hidden" name="national_team_id" value="<?php echo $image['national_team_id']; ?>"/>
+                    <input type="hidden" name="user_id" value="<?php echo $image['user_id'] ?>"/>
                     <input type="hidden" name="image_id" value="<?php echo $image['id']; ?>"/>
                 </div>
                 <br/>
@@ -107,12 +109,13 @@ include '../widget/header.php';
     ?>
     <hr/>
     <h3><a href="adminPanel.php" class="btn btn-default links">Powrót do panelu Admina</a></h3>
+
 </div>
+
 <?php
 
 include '../widget/footer.php';
 include '../widget/scripts.php';
-
 ?>
 </body>
 </html>

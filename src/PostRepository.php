@@ -40,6 +40,24 @@ class PostRepository
         return $result;
     }
 
+    public static function loadAllPostsExceptAdmin(PDO $connection, $id)
+    {
+        $sql = "SELECT p.id, p.text, p.created_at, u.username FROM posts p 
+                LEFT JOIN users u ON p.user_id = u.id
+                WHERE user_id <> :id
+                ORDER BY created_at DESC";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        return $result;
+    }
+
     public static function loadAllPostsByUserId(PDO $connection, $userId)
     {
         $sql = "SELECT p.id, p.text, p.created_at, u.username FROM posts p
@@ -63,6 +81,28 @@ class PostRepository
         $sql = "SELECT count(id) as count FROM posts";
 
         $result = $connection->prepare($sql);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['count'];
+            }
+        }
+
+        return false;
+    }
+
+    public static function countAllPostsExceptAdmin(PDO $connection, $id)
+    {
+        $sql = "SELECT count(id) as count FROM posts
+                WHERE user_id <> :id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {

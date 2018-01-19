@@ -63,6 +63,28 @@ class ImageRepository
         return $imageArray;
     }
 
+    public static function loadUsersImageDetails(PDO $connection, $id)
+    {
+        $sql = "SELECT i.id, i.image_path, i.user_id, u.username FROM images i 
+                LEFT JOIN users u ON i.user_id = u.id
+                WHERE user_id IS NOT NULL 
+                AND user_id <> :id";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $imageArray = [];
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $imageArray[] = $row;
+        }
+        return $imageArray;
+    }
+
     public static function loadImageDetailsByNationalTeamId(PDO $connection, $nationalTeamId)
     {
         $sql = "SELECT * FROM images WHERE national_team_id = :national_team_id";

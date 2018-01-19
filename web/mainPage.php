@@ -112,7 +112,7 @@ include '../widget/header.php';
 
         <form action="#" method="POST">
             <div class="toggle-comment-form">
-                <span class="toggle">Pokaż / ukryj</span>
+                <span style="color: orangered" class="toggle">Pokaż / ukryj</span>
                 <textarea class="commentText forms" name="commentText"
                           placeholder="Dodaj swój komentarz" maxlength='80'></textarea><br/>
                 <button class="btn btn-primary links" type='submit'>Dodaj komentarz</button>
