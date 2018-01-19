@@ -12,7 +12,7 @@ $user = loggedUser($connection);
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="../web/messageSite.php">Messanger</a></li>
-                    <li><a href="../web/nationalTeamsList.php">Reprezentacje</a></li>
+                    <li><a href="../web/groups.php">Reprezentacje</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php if ($user->getUsername() === 'admin') {

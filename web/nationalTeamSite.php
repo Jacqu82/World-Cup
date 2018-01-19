@@ -25,15 +25,16 @@ include '../widget/header.php';
     <?php
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        if (isset($_GET['id']) && isset($_GET['name']) && isset($_GET['coach'])) {
+        if (isset($_GET['id'])) {
             $nationalTeamId = $_GET['id'];
-            $nationalTeamName = $_GET['name'];
-            $nationalTeamCoach = $_GET['coach'];
         }
     }
 
-    echo '<h1>' . $nationalTeamName . '</h1>';
-    echo '<h3>Trener reprezentacji: ' . $nationalTeamCoach . '</h3>';
+    $nationalTeamDetails = NationalTeamRepository::loadNationalTeamsById($connection, $nationalTeamId);
+    foreach ($nationalTeamDetails as $nationalTeamDetail) {
+        echo '<h1>' . $nationalTeamDetail['name'] . '</h1>';
+        echo '<h3>Trener reprezentacji: ' . $nationalTeamDetail['coach'] . '</h3>';
+    }
 
     $images = ImageRepository::loadImageDetailsByNationalTeamId($connection, $nationalTeamId);
     foreach ($images as $image) {
@@ -47,11 +48,15 @@ include '../widget/header.php';
     }
     echo '<hr/>';
 
+    $groups = GroupRepository::loadAllGroupsById($connection, $_SESSION['group_id']);
+    foreach ($groups as $group) {
+        $id = $group['id'];
 
+    }
+
+    echo '<hr/>';
+    echo "<h3><a href='groupList.php?id=$id' class='btn btn-default links'>Powrót do grupy</a></h3>";
     ?>
-
-    <hr/>
-    <h3><a href="nationalTeamsList.php" class="btn btn-default links">Powrót do listy</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

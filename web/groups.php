@@ -24,12 +24,12 @@ include '../widget/header.php';
     <hr/>
     <?php
 
-    $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
-    foreach ($nationalTeams as $nationalTeam) {
-        $id = $nationalTeam['id'];
-        $name = $nationalTeam['name'];
-        $coach = $nationalTeam['coach'];
-        echo "<a href='nationalTeamSite.php?id=$id&name=$name&coach=$coach'
+    $groups = GroupRepository::loadAllGroups($connection);
+    foreach ($groups as $group) {
+        $id = $group['id'];
+        $name = $group['name'];
+
+        echo "<a href='groupList.php?id=$id'
                 class='btn btn-primary links'>$name</a> ";
     }
 

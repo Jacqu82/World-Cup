@@ -27,14 +27,17 @@ class NationalTeamRepository
         return false;
     }
 
-    public static function loadAllNationalTeams(PDO $connection)
+    public static function loadAllNationalTeamsByGroupId(PDO $connection, $id)
     {
-        $sql = "SELECT * FROM national_teams";
+        $sql = "SELECT n.id, n.name, g.name as group_name FROM national_teams n
+                LEFT JOIN groups g ON n.group_id = g.id
+                WHERE group_id = :id";
         $result = $connection->prepare($sql);
         if (!$result) {
             die("Query Error!" . $connection->errorInfo());
         }
 
+        $result->bindParam('id', $id);
         $result->execute();
         $nationalTeams = [];
         if ($result->rowCount() > 0) {
@@ -42,6 +45,27 @@ class NationalTeamRepository
                 $nationalTeams[] = $row;
             }
             return $nationalTeams;
+        }
+
+        return false;
+    }
+
+    public static function loadNationalTeamsById(PDO $connection, $id)
+    {
+        $sql = "SELECT name, coach FROM national_teams WHERE id = :id";
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindParam('id', $id);
+        $result->execute();
+        $array = [];
+        if ($result->rowCount() > 0) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $array[] = $row;
+            }
+            return $array;
         }
 
         return false;
