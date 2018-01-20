@@ -160,6 +160,21 @@ class UserRepository
         return false;
     }
 
+    public static function loadAllSearchedUsers(PDO $connection, $username)
+    {
+        $sql = "SELECT id, username FROM users WHERE username LIKE :username";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->bindValue('username', $username.'%');
+        $result->execute();
+
+        return $result;
+    }
+
     public static function loadAllUsersByEmail(PDO $connection, $email)
     {
         $sql = "SELECT id FROM users WHERE email = :email";

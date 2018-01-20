@@ -33,6 +33,9 @@ include '../widget/header.php';
     <img src="  <?php
     $firstImage = ImageRepository::loadFirstImageDetailsByUserId($connection, $user->getId());
     echo $firstImage['image_path']; ?> " width='150' height='100'/><br/>
+    <?php if ($user->getRole() === 'admin') {
+        echo '<h3><a href="../admin/adminPanel.php" class="btn btn-success links">Panel Administracyjny</a></h3>';
+    } ?>
     <h3>Twój adres E-mail: <?php echo $user->getEmail(); ?></h3>
     <h3>Data utworzenia profilu: <?php echo $user->getCreatedAt(); ?></h3>
 

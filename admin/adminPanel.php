@@ -45,6 +45,8 @@ include '../widget/header.php';
     <a href="manageImages.php" class="btn btn-primary links">Zarządzaj zdjęciami użytkowników</a>
 
     <hr/>
+    <a href="../web/userPanel.php" class="btn btn-default links">Powrót do profilu</a>
+    <hr/>
 </div>
 
 <?php
