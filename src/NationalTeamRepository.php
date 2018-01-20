@@ -29,8 +29,9 @@ class NationalTeamRepository
 
     public static function loadAllNationalTeamsByGroupId(PDO $connection, $id)
     {
-        $sql = "SELECT n.id, n.name, g.name as group_name FROM national_teams n
+        $sql = "SELECT n.id, n.name, g.name as group_name, i.image_path FROM national_teams n
                 LEFT JOIN groups g ON n.group_id = g.id
+                LEFT JOIN images i ON n.id = i.flag_id
                 WHERE group_id = :id";
         $result = $connection->prepare($sql);
         if (!$result) {
@@ -73,7 +74,7 @@ class NationalTeamRepository
 
     public static function loadAllNationalTeams(PDO $connection)
     {
-        $sql = "SELECT name FROM national_teams";
+        $sql = "SELECT id, name FROM national_teams";
         $result = $connection->prepare($sql);
         if (!$result) {
             die("Query Error!" . $connection->errorInfo());

@@ -8,15 +8,17 @@ class ImageRepository
         $imagePath = $image->getImagePath();
         $userId = $image->getUserId();
         $nationalTeamId = $image->getNationalTeamId();
+        $flagId = $image->getFlagId();
 
         if ($id == -1) {
-            $sql = "INSERT INTO images (image_path, user_id, national_team_id) 
-                    VALUES (:image_path, :user_id, :national_team_id)";
+            $sql = "INSERT INTO images (image_path, user_id, national_team_id, flag_id) 
+                    VALUES (:image_path, :user_id, :national_team_id, :flag_id)";
 
             $result = $connection->prepare($sql);
             $result->bindParam('image_path', $imagePath);
             $result->bindParam('user_id', $userId);
             $result->bindParam('national_team_id', $nationalTeamId);
+            $result->bindParam('flag_id', $flagId);
             $result->execute();
 
             $id = $connection->lastInsertId();
@@ -63,6 +65,24 @@ class ImageRepository
         return $imageArray;
     }
 
+    public static function loadNationalTeamFlag(PDO $connection)
+    {
+        $sql = "SELECT * FROM images WHERE flag_id IS NOT NULL";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $imageArray = [];
+        $result->execute();
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $imageArray[] = $row;
+        }
+        return $imageArray;
+    }
+
     public static function loadUsersImageDetails(PDO $connection, $id)
     {
         $sql = "SELECT i.id, i.image_path, i.user_id, u.username FROM images i 
@@ -88,6 +108,25 @@ class ImageRepository
     public static function loadImageDetailsByNationalTeamId(PDO $connection, $nationalTeamId)
     {
         $sql = "SELECT * FROM images WHERE national_team_id = :national_team_id";
+
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $imageNationsArray = [];
+        $result->bindParam('national_team_id', $nationalTeamId);
+        $result->execute();
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $imageNationsArray[] = $row;
+        }
+        return $imageNationsArray;
+    }
+
+    public static function loadFlagByNationalTeamId(PDO $connection, $nationalTeamId)
+    {
+        $sql = "SELECT * FROM images WHERE flag_id = :national_team_id";
 
         $result = $connection->prepare($sql);
         if (!$result) {

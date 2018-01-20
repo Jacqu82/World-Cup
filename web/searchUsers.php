@@ -44,17 +44,22 @@ include '../widget/header.php';
 
             $users = UserRepository::loadAllSearchedUsers($connection, $search);
 
-            echo '<h3>Liczba znalezionych użytkowników: ' . $users->rowCount() . '</h3>';
-
             if ($users->rowCount() > 0) {
+                echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
+                echo '<strong>Liczba znalezionych użytkowników: ' . $users->rowCount() . '</strong>';
+                echo "</div>";
+
                 foreach ($users as $user) {
                     $id = $user['id'];
                     $username = $user['username'];
-                    echo "<h6><a href='userProfile.php?id=$id&username=$username'
+
+                    echo "<h6><a href='userProfile.php?id=$id'
                                 class='btn btn-info links'>$username</a></h6>";
                 }
             } else {
-                echo '<h3>Brak wyników wyszukiwania!</h3>';
+                echo "<div class=\"flash-message alert alert-danger alert-dismissible\" role=\"alert\">";
+                echo '<strong>Brak wyników wyszukiwania</strong>';
+                echo "</div>";
             }
         }
     }

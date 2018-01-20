@@ -33,11 +33,20 @@ include '../widget/header.php';
             echo '<h3>' . $nationalTeams[0]['group_name'] . '</h3>';
 
             foreach ($nationalTeams as $nationalTeam) {
-                    $id = $nationalTeam['id'];
-                    $name = $nationalTeam['name'];
+                $id = $nationalTeam['id'];
+                $name = $nationalTeam['name'];
+                $flag = $nationalTeam['image_path'];
 
-                    echo "<a href='nationalTeamSite.php?id=$id'
-                class='btn btn-primary links'>$name</a> ";
+                ?>
+
+                <div class="row"><a href="nationalTeamSite.php?id=<?php echo $id; ?>"
+                                    class="btn btn-primary links"><?php echo $name; ?>
+                        <span class='img-thumbnail1'>
+                            <img src="  <?php echo $flag; ?> " width='30' height='20'/><br/>
+                        </span>
+                </a></div>
+
+                <?php
             }
         }
     }

@@ -36,6 +36,19 @@ include '../widget/header.php';
         echo '<h3>Trener reprezentacji: ' . $nationalTeamDetail['coach'] . '</h3>';
     }
 
+    $flag = ImageRepository::loadFlagByNationalTeamId($connection, $nationalTeamId);
+    foreach ($flag as $image) {
+
+        ?>
+        <div class='img-thumbnail1'>
+            <img src="  <?php echo $image['image_path']; ?> " width='200' height='100'/><br/>
+        </div>
+
+        <?php
+    }
+
+    echo '<hr/>';
+
     $images = ImageRepository::loadImageDetailsByNationalTeamId($connection, $nationalTeamId);
     foreach ($images as $image) {
 

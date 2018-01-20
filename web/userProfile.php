@@ -78,7 +78,7 @@ include '../widget/header.php';
 
 
     <hr/>
-    <h3><a href="mainPage.php" class="btn btn-default links">Powrót do Strony głównej</a></h3>
+    <h3><a href="searchUsers.php" class="btn btn-default links">Powrót do Strony wyszukiwania</a></h3>
 
 </div>
 <?php

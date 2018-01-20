@@ -49,6 +49,7 @@ include '../widget/header.php';
     </div>
 
     <?php
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['receiverId']) && isset($_POST['text'])) {
         $receiverId = (int)$_POST['receiverId'];
@@ -76,9 +77,11 @@ include '../widget/header.php';
         }
     }
 
+            $unread = MessageRepository::countAllUnreadMessages($connection, $user->getId());
             ?>
             <hr/>
-            <a href="inbox.php" class="btn btn-primary links">Skrzynka odbiorcza</a>
+            <a href="inbox.php" class="btn btn-primary links">Skrzynka odbiorcza
+                <span class="badge"><?php echo $unread; ?></span></a>
             <a href="outbox.php" class="btn btn-info links">Skrzynka nadawcza</a>
             <div>
                 <a href="mainPage.php" class="btn btn-default links">Powrót</a>

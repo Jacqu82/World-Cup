@@ -7,6 +7,7 @@ class Image
     private $imagePath;
     private $userId;
     private $nationalTeamId;
+    private $flagId;
     private $createdAt;
 
     public function __construct()
@@ -15,6 +16,7 @@ class Image
         $this->imagePath = '';
         $this->userId = null;
         $this->nationalTeamId = null;
+        $this->flagId = null;
     }
 
     /**
@@ -104,6 +106,24 @@ class Image
     public function setNationalTeamId($nationalTeamId)
     {
         $this->nationalTeamId = $nationalTeamId;
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getFlagId()
+    {
+        return $this->flagId;
+    }
+
+    /**
+     * @param null $flagId
+     * @return $this
+     */
+    public function setFlagId($flagId)
+    {
+        $this->flagId = $flagId;
         return $this;
     }
 }

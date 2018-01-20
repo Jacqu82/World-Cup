@@ -43,6 +43,8 @@ include '../widget/header.php';
     <a href="managePosts.php" class="btn btn-primary links">Zarządzaj postami</a>
     <a href="manageComments.php" class="btn btn-info links">Zarządzaj komentarzami</a>
     <a href="manageImages.php" class="btn btn-primary links">Zarządzaj zdjęciami użytkowników</a>
+    <a href="addNationalTeamFlag.php" class="btn btn-success links">Dodaj flagi reprezentacji</a>
+    <a href="editNationalTeamFlag.php" class="btn btn-success links">Edytuj flage reprezentacji</a>
 
     <hr/>
     <a href="../web/userPanel.php" class="btn btn-default links">Powrót do profilu</a>
