@@ -15,7 +15,7 @@ $user = loggedUser($connection);
                     <li><a href="../web/groups.php">Reprezentacje</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <?php if ($user->getUsername() === 'admin') {
+                    <?php if ($user->getRole() === 'admin') {
                         echo '<li><a href="../admin/adminPanel.php">Admin Panel</a></li>';
                     } ?>
                     <li style="margin-top: 15px">Zalogowany jako:

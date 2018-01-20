@@ -30,12 +30,13 @@ include '../widget/header.php';
             $_SESSION['group_id'] = $groupId;
 
             $nationalTeams = NationalTeamRepository::loadAllNationalTeamsByGroupId($connection, $groupId);
-
             echo '<h3>' . $nationalTeams[0]['group_name'] . '</h3>';
+
             foreach ($nationalTeams as $nationalTeam) {
-                $id = $nationalTeam['id'];
-                $name = $nationalTeam['name'];
-                echo "<a href='nationalTeamSite.php?id=$id'
+                    $id = $nationalTeam['id'];
+                    $name = $nationalTeam['name'];
+
+                    echo "<a href='nationalTeamSite.php?id=$id'
                 class='btn btn-primary links'>$name</a> ";
             }
         }
@@ -44,7 +45,7 @@ include '../widget/header.php';
     ?>
 
     <hr/>
-    <h3><a href="groups.php" class="btn btn-default links">Powrót</a></h3>
+    <h3><a href="groups.php" class="btn btn-default links">Powrót do listy grup</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

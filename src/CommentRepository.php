@@ -123,8 +123,7 @@ class CommentRepository
 
     public static function countAllCommentsExceptAdmin(PDO $connection, $id)
     {
-        $sql = "SELECT count(id) as countComments FROM comments
-                WHERE user_id <> :id";
+        $sql = "SELECT count(id) as countComments FROM comments WHERE user_id <> :id";
 
         $result = $connection->prepare($sql);
         $result->bindParam('id', $id);
@@ -139,6 +138,7 @@ class CommentRepository
                 return $row['countComments'];
             }
         }
+
         return false;
     }
 

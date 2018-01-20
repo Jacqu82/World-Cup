@@ -34,14 +34,17 @@ class UserRepository
         $username = $user->getUsername();
         $email = $user->getEmail();
         $password = $user->getPassword();
+        $role = $user->getRole();
 
         if ($id == -1) {
-            $sql = "INSERT INTO users (username, email, password) VALUES (:username, :email, :password)";
+            $sql = "INSERT INTO users (username, email, password, role) 
+                    VALUES (:username, :email, :password, :role)";
 
             $result = $connection->prepare($sql);
             $result->bindParam('username', $username, PDO::PARAM_STR);
             $result->bindParam('email', $email, PDO::PARAM_STR);
             $result->bindParam('password', $password, PDO::PARAM_STR);
+            $result->bindParam('role', $role, PDO::PARAM_STR);
 
             $result->execute();
             //last insert id!!!!!
@@ -149,6 +152,7 @@ class UserRepository
                 ->setUsername($row['username'])
                 ->setEmail($row['email'])
                 ->setHash($row['password'])
+                ->setRole($row['role'])
                 ->setCreatedAt($row['created_at']);
             return $user;
         }

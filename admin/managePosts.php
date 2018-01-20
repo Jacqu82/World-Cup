@@ -5,7 +5,7 @@ require_once '../connection.php';
 
 session_start();
 if (!isset($_SESSION['login'])) {
-    header('Location: index.php');
+    header('Location: ../web/index.php');
     exit();
 }
 
@@ -13,6 +13,9 @@ if (!isset($_SESSION['login'])) {
 
 $user = loggedUser($connection);
 
+if ($user->getRole() != 'admin') {
+    header('Location: ../web/mainPage.php');
+}
 
 ?>
 

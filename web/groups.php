@@ -29,14 +29,14 @@ include '../widget/header.php';
         $id = $group['id'];
         $name = $group['name'];
 
-        echo "<a href='groupList.php?id=$id'
-                class='btn btn-primary links'>$name</a> ";
+        echo "<h6><a href='groupList.php?id=$id'
+                class='btn btn-success links'>$name</a></h6>";
     }
 
     ?>
 
     <hr/>
-    <h3><a href="mainPage.php" class="btn btn-default links">Powrót</a></h3>
+    <h3><a href="mainPage.php" class="btn btn-default links">Powrót so strony głównej</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

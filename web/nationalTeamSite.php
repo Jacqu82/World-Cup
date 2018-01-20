@@ -54,7 +54,6 @@ include '../widget/header.php';
 
     }
 
-    echo '<hr/>';
     echo "<h3><a href='groupList.php?id=$id' class='btn btn-default links'>Powrót do grupy</a></h3>";
     ?>
 </div>

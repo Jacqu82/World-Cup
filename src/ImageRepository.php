@@ -224,4 +224,25 @@ class ImageRepository
 
         return $result;
     }
+
+    public static function countAllImagesExceptAdmin(PDO $connection, $id)
+    {
+        $sql = "SELECT count(id) as countImages FROM images WHERE user_id <> :id";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('id', $id);
+        $result->execute();
+
+        if (!$result) {
+            die("Connection Error" . $connection->errorInfo());
+        }
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['countImages'];
+            }
+        }
+
+        return false;
+    }
 }

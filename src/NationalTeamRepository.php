@@ -70,4 +70,24 @@ class NationalTeamRepository
 
         return false;
     }
+
+    public static function loadAllNationalTeams(PDO $connection)
+    {
+        $sql = "SELECT name FROM national_teams";
+        $result = $connection->prepare($sql);
+        if (!$result) {
+            die("Query Error!" . $connection->errorInfo());
+        }
+
+        $result->execute();
+        $array = [];
+        if ($result->rowCount() > 0) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $array[] = $row;
+            }
+            return $array;
+        }
+
+        return false;
+    }
 }
