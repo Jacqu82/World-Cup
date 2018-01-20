@@ -44,6 +44,8 @@ include '../widget/header.php';
 
             $users = UserRepository::loadAllSearchedUsers($connection, $search);
 
+            echo '<h3>Liczba znalezionych użytkowników: ' . $users->rowCount() . '</h3>';
+
             if ($users->rowCount() > 0) {
                 foreach ($users as $user) {
                     $id = $user['id'];
