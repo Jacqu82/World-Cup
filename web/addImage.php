@@ -70,7 +70,7 @@ include '../widget/header.php';
                     ->setImagePath($path)
                     ->setUserId($_POST['userId']);
                 $upload = ImageRepository::saveToDB($connection, $image);
-                echo "<div class=\"text-center alert alert-success\">";
+                echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie dodane pomyślnie :)</strong>';
                 echo "</div>";
             } else {

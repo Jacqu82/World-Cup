@@ -20,7 +20,7 @@ include '../widget/head.php';
     <hr/>
     <?php
     if (isset($_SESSION['delete_account'])) {
-        echo "<div class=\"text-center alert alert-success\">";
+        echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
         echo '<strong>' . $_SESSION['delete_account'] . '</strong>';
         echo "</div>";
         unset($_SESSION['delete_account']);

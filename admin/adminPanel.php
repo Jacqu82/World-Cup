@@ -38,13 +38,13 @@ include '../widget/header.php';
     <h3>Panel Administracyjny</h3>
 
     <a href="addNationalTeam.php" class="btn btn-success links">Dodaj reprezentacje do bazy</a>
-    <a href="addNationalTeamImage.php" class="btn btn-success links">Dodaj zdjęcia reprezentacji</a>
-    <a href="editNationalTeamImages.php" class="btn btn-warning links">Edytuj zdjęcia reprezentacji</a>
+    <a href="addNationalTeamImage.php" class="btn btn-info links">Dodaj zdjęcia reprezentacji</a>
+    <a href="editNationalTeamImages.php" class="btn btn-success links">Edytuj zdjęcia reprezentacji</a>
     <a href="managePosts.php" class="btn btn-primary links">Zarządzaj postami</a>
     <a href="manageComments.php" class="btn btn-info links">Zarządzaj komentarzami</a>
     <a href="manageImages.php" class="btn btn-primary links">Zarządzaj zdjęciami użytkowników</a>
-    <a href="addNationalTeamFlag.php" class="btn btn-success links">Dodaj flagi reprezentacji</a>
-    <a href="editNationalTeamFlag.php" class="btn btn-success links">Edytuj flage reprezentacji</a>
+    <a href="addNationalTeamFlag.php" class="btn btn-warning links">Dodaj flagi reprezentacji</a>
+    <a href="editNationalTeamFlag.php" class="btn btn-warning links">Edytuj flage reprezentacji</a>
 
     <hr/>
     <a href="../web/userPanel.php" class="btn btn-default links">Powrót do profilu</a>

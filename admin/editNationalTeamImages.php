@@ -67,7 +67,7 @@ include '../widget/header.php';
             if (!file_exists($path)) {
                 $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
             } else {
-                echo "<div class=\"text-center alert alert-danger\">";
+                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
                 echo "</div>";
                 die();
@@ -79,7 +79,7 @@ include '../widget/header.php';
                 echo '<strong>Zdjęcie poprawnie edytowane :)</strong>';
                 echo "</div>";
             } else {
-                echo "<div class=\"text-center alert alert-danger\">";
+                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
                 echo '<strong>Wystąpił błąd podczas edycji zdjęcia!</strong>';
                 echo "</div>";
                 die();

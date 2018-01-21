@@ -69,7 +69,7 @@ include '../widget/header.php';
             if (!file_exists($path)) {
                 $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
             } else {
-                echo "<div class=\"text-center alert alert-danger\">";
+                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
                 echo "</div>";
                 die();
@@ -80,11 +80,11 @@ include '../widget/header.php';
                     ->setImagePath($path)
                     ->setNationalTeamId($_POST['nationalTeams']);
                 $upload = ImageRepository::saveToDB($connection, $image);
-                echo "<div class=\"text-center alert alert-success\">";
+                echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie dodane pomyślnie :)</strong>';
                 echo "</div>";
             } else {
-                echo "<div class=\"text-center alert alert-danger\">";
+                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
                 echo '<strong>Wystąpił błąd podczas dodawania zdjęcia!</strong>';
                 echo "</div>";
                 die();

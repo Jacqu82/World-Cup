@@ -43,7 +43,7 @@ include '../widget/header.php';
             $commentId = $_POST['comment_id'];
             if (strlen($editComment) > 150) {
                 echo '
-                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                <div class="flash-message alert alert-warning alert-dismissible" role="alert">
                     <strong>Komentarz może mieć maksymalnie 80 znaków!</strong>
                 </div>';
             } else {

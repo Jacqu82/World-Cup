@@ -45,7 +45,7 @@ include '../widget/header.php';
             unlink($path);
             $toDelete = ImageRepository::loadImageById($connection, $imageId);
             ImageRepository::delete($connection, $toDelete);
-            echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
+            echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
             echo '<strong>Flaga poprawnie usunięta :)</strong>';
             echo "</div>";
         }
@@ -67,7 +67,7 @@ include '../widget/header.php';
             if (!file_exists($path)) {
                 $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
             } else {
-                echo "<div class=\"text-center alert alert-danger\">";
+                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
                 echo '<strong>Flaga o podanej nazwie już istnieje!</strong>';
                 echo "</div>";
                 die();
@@ -75,11 +75,11 @@ include '../widget/header.php';
 
             if ($upload) {
                 ImageRepository::updateImagePath($connection, $path, $imageId);
-                echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
+                echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Flaga poprawnie edytowana :)</strong>';
                 echo "</div>";
             } else {
-                echo "<div class=\"text-center alert alert-danger\">";
+                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
                 echo '<strong>Wystąpił błąd podczas edycji flagi!</strong>';
                 echo "</div>";
                 die();

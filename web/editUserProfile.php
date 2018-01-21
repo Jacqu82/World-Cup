@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($is_ok) {
             $user->setUsername($username);
             if (UserRepository::updateUsername($connection, $user)) {
-                echo "<div class=\"text-center alert alert-success\">";
+                echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zmieniono login na ' . $user->getUsername() . '</strong>';
                 echo "</div>";
             }
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($is_ok) {
             $user->setEmail($email);
             if (UserRepository::updateEmail($connection, $user)) {
-                echo "<div class=\"text-center alert alert-success\">";
+                echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zmieniono adres e-mail na ' . $user->getEmail() . '</strong>';
                 echo "</div>";
             }
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($is_ok) {
             $user->setPassword($password);
             if (UserRepository::updatePassword($connection, $user)) {
-                echo "<div class=\"text-center alert alert-success\">";
+                echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Hasło zostało zmienione!</strong>';
                 echo "</div>";
             }
@@ -128,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php');
         }
     }
-
 }
 
 ?>
@@ -140,49 +139,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include '../widget/head.php';
 
 ?>
-<body>
+
 <?php
 include '../widget/header.php';
 ?>
-<div class="container text-center">
-    <h1>World Cup 2018</h1>
-    <hr/>
-    <div class="container" align="center">
-        <form action="#" method="post">
-            <h3>Edycja profilu</h3>
-                <p class="text-primary">Zmień login:</p>
-                <div class="form-group">
-                    <input type="text" class="forms" name="username" placeholder="Login"
-                           value="<?php echo $user->getUsername(); ?>">
-                    <br/>
-                    <button type="submit" name="userSubmit" class="btn btn-warning links">Zmień</button>
-                </div>
-            <hr/>
-                <p class="text-primary">Aktualizuj adres E-mail:</p>
-                <div class="form-group">
-                    <input type="email" class="forms" name="email" placeholder="E-mail"
-                           value="<?php echo $user->getEmail(); ?>">
-                    <br>
-                    <button type="submit" name="emailSubmit" class="btn btn-warning links">Zmień</button>
-                </div>
-            <hr/>
-                <p class="text-primary">Zmień hasło:</p>
-                <div class="form-group">
-                    <input type="password" class="forms" name="password" placeholder="Hasło">
-                    <br>
-                    <button type="submit" name="passSubmit" class="btn btn-warning links">Zmień</button>
-                </div>
-            <hr/>
-            <div>
-                <div class="form-group">
-                    <button type="submit" name="deleteAccount" class="btn btn-danger links">Usuń konto</button>
-                </div>
-            </div>
-        </form>
+    <div class="container text-center">
+        <h1>World Cup 2018</h1>
         <hr/>
-        <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
+        <div class="container" align="center">
+            <form action="#" method="post">
+                <h3>Edycja profilu</h3>
+                    <p class="text-primary">Zmień login:</p>
+                    <div class="form-group">
+                        <input type="text" class="forms" name="username" placeholder="Login"
+                               value="<?php echo $user->getUsername(); ?>">
+                        <br/>
+                        <button type="submit" name="userSubmit" class="btn btn-warning links">Zmień</button>
+                    </div>
+                <hr/>
+                    <p class="text-primary">Aktualizuj adres E-mail:</p>
+                    <div class="form-group">
+                        <input type="email" class="forms" name="email" placeholder="E-mail"
+                               value="<?php echo $user->getEmail(); ?>">
+                        <br>
+                        <button type="submit" name="emailSubmit" class="btn btn-warning links">Zmień</button>
+                    </div>
+                <hr/>
+                    <p class="text-primary">Zmień hasło:</p>
+                    <div class="form-group">
+                        <input type="password" class="forms" name="password" placeholder="Hasło">
+                        <br>
+                        <button type="submit" name="passSubmit" class="btn btn-warning links">Zmień</button>
+                    </div>
+                <hr/>
+                <div>
+                    <div class="form-group">
+                        <button type="submit" name="deleteAccount" class="btn btn-danger links">Usuń konto</button>
+                    </div>
+                </div>
+            </form>
+            <hr/>
+            <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
+        </div>
     </div>
-</div>
+
 <?php
 include '../widget/footer.php';
 include '../widget/scripts.php';

@@ -43,7 +43,9 @@ include '../widget/header.php';
                 ->setCoach($coach)
                 ->setGroupId($groupId);
             if (NationalTeamRepository::saveToDB($connection, $nationalTeam)) {
-                echo '<h3>' .$_POST['name'] . ' została dodana do bazy danych!</h3>';
+                echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
+                echo '<strong>Poprawnie dodano reprezentację do bazy</strong>';
+                echo "</div>";
             }
         }
     }

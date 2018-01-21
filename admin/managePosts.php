@@ -42,7 +42,7 @@ include '../widget/header.php';
             $postId = $_POST['post_id'];
             if (strlen($editText) > 150) {
                 echo '
-                <div class="flash-message alert alert-success alert-dismissible" role="alert">
+                <div class="flash-message alert alert-warning alert-dismissible" role="alert">
                     <strong>Post może mieć maksymalnie 150 znaków!</strong>
                 </div>';
             } else {
