@@ -24,40 +24,70 @@ include '../widget/header.php';
     <hr/>
     <?php
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['user_id']) && isset($_POST['national_team_id'])) {
+            $userId = $_POST['user_id'];
+            $teamId = $_POST['national_team_id'];
+
+            $favourite = new Favourite();
+            $favourite
+                ->setUserId($userId)
+                ->setNationalTeamId($teamId);
+            FavouriteRepository::saveToDB($connection, $favourite);
+        }
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (isset($_GET['id'])) {
             $nationalTeamId = $_GET['id'];
         }
-    }
 
-    $nationalTeamDetails = NationalTeamRepository::loadNationalTeamsById($connection, $nationalTeamId);
-    foreach ($nationalTeamDetails as $nationalTeamDetail) {
-        echo '<h1>' . $nationalTeamDetail['name'] . '</h1>';
-        echo '<h3>Trener reprezentacji: ' . $nationalTeamDetail['coach'] . '</h3>';
-    }
 
-    $flag = ImageRepository::loadFlagByNationalTeamId($connection, $nationalTeamId);
-    foreach ($flag as $image) {
+        $nationalTeamDetails = NationalTeamRepository::loadNationalTeamsById($connection, $nationalTeamId);
+        foreach ($nationalTeamDetails as $nationalTeamDetail) {
+            echo '<h1>' . $nationalTeamDetail['name'] . '</h1>';
+            echo '<h3>Trener reprezentacji: ' . $nationalTeamDetail['coach'] . '</h3>';
+        }
 
-        ?>
-        <div class='img-thumbnail1'>
-            <img src="  <?php echo $image['image_path']; ?> " width='200' height='100'/><br/>
-        </div>
+        $flag = ImageRepository::loadFlagByNationalTeamId($connection, $nationalTeamId);
+        foreach ($flag as $image) {
 
-        <?php
-    }
+            ?>
+            <div class='img-thumbnail1'>
+                <img src="  <?php echo $image['image_path']; ?> " width='200' height='115'/><br/>
+            </div>
 
-    echo '<hr/>';
+            <?php
+        }
 
-    $images = ImageRepository::loadImageDetailsByNationalTeamId($connection, $nationalTeamId);
-    foreach ($images as $image) {
+        echo '<hr/>';
 
-        ?>
-        <div class='img-thumbnail1'>
-            <img src="  <?php echo $image['image_path']; ?> " width='500' height='300'/><br/>
-        </div>
+        $secure = FavouriteRepository::secureVote($connection, $user->getId(), $nationalTeamId);
+        if ($secure->rowCount() == 0) {
+            ?>
+            <div class="vote">
+                <a href="#" class="btn btn-success links favourite"
+                   data-user_id="<?php echo $user->getId(); ?>"
+                   data-team_id="<?php echo $nationalTeamId; ?>">Kibicuj</a>
+            </div>
 
-        <?php
+            <?php
+        } else {
+            echo "<div class=\"text-center alert alert-success\">";
+            echo '<strong>Kibicujesz :)</strong>';
+            echo "</div>";
+        }
+
+        $images = ImageRepository::loadImageDetailsByNationalTeamId($connection, $nationalTeamId);
+        foreach ($images as $image) {
+
+            ?>
+            <div class='img-thumbnail1'>
+                <img src="  <?php echo $image['image_path']; ?> " width='500' height='300'/><br/>
+            </div>
+
+            <?php
+        }
     }
     echo '<hr/>';
 

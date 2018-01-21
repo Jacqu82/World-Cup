@@ -40,9 +40,9 @@ include '../widget/header.php';
                 ?>
 
                 <div class="row"><a href="nationalTeamSite.php?id=<?php echo $id; ?>"
-                                    class="btn btn-primary links"><?php echo $name; ?>
+                                    class="btn btn-primary links group-list"><?php echo $name; ?>
                         <span class='img-thumbnail1'>
-                            <img src="  <?php echo $flag; ?> " width='30' height='20'/><br/>
+                            <img src="  <?php echo $flag; ?> " width='44' height='28'/><br/>
                         </span>
                 </a></div>
 

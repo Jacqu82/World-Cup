@@ -41,6 +41,12 @@ include '../widget/header.php';
 
     <?php
 
+    $favourites = FavouriteRepository::loadAllFavouritesTeamsByUserId($connection, $user->getId());
+    echo '<h3>Reprezentacje, którym kibicujesz:</h3>';
+    foreach ($favourites as $favourite) {
+        echo '<h4>'.$favourite['name'].'</h4>';
+    }
+
     $count = ImageRepository::countAllImagesByUserId($connection, $user->getId());
     echo '<h3>Liczba Twoich zdjęć ( ' . $count . ' )</h3>';
 
