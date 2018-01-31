@@ -20,8 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $is_ok = true;
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
 
-        //$user = UserRepository::loadUserById($connection, $_SESSION['id']);
-
         //check username length
         if ((strlen($username) < 3) || (strlen($username) > 15)) {
             echo "<div class=\"text-center alert alert-danger\">";
@@ -151,16 +149,14 @@ include '../widget/header.php';
                 <h3>Edycja profilu</h3>
                     <p class="text-primary">Zmień login:</p>
                     <div class="form-group">
-                        <input type="text" class="forms" name="username" placeholder="Login"
-                               value="<?php echo $user->getUsername(); ?>">
+                        <input type="text" class="forms" name="username" value="<?php echo $user->getUsername(); ?>">
                         <br/>
                         <button type="submit" name="userSubmit" class="btn btn-warning links">Zmień</button>
                     </div>
                 <hr/>
                     <p class="text-primary">Aktualizuj adres E-mail:</p>
                     <div class="form-group">
-                        <input type="email" class="forms" name="email" placeholder="E-mail"
-                               value="<?php echo $user->getEmail(); ?>">
+                        <input type="email" class="forms" name="email" value="<?php echo $user->getEmail(); ?>">
                         <br>
                         <button type="submit" name="emailSubmit" class="btn btn-warning links">Zmień</button>
                     </div>

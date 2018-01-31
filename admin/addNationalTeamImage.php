@@ -2,6 +2,7 @@
 
 require_once '../src/lib.php';
 require_once '../connection.php';
+require_once 'autoload.php';
 
 session_start();
 if (!isset($_SESSION['login'])) {
@@ -33,6 +34,7 @@ include '../widget/header.php';
 <div class="container text-center">
     <h1>World Cup 2018</h1>
     <hr/>
+    <h3>Dodaj zdjęcie reprezentacji</h3>
 
     <form method="POST" action="#" enctype="multipart/form-data">
         <div class="file forms">
@@ -59,27 +61,18 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0)
             && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['nationalTeams'])) {
-            $nationalTeamId = $_POST['nationalTeams'];
-            $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/teams/' . $nationalTeamId . '/';
-            if (!file_exists($path)) {
-                mkdir($path);
-            }
-            $path .= $filename;
-            if (!file_exists($path)) {
-                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
-            } else {
-                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
-                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
-                echo "</div>";
-                die();
-            }
+	        $kindId = $_POST['nationalTeams'];
+            $kind = 'teams';
+
+            $addImage = ImageRepository::addImage($kind, $kindId);
+            $upload = $addImage['upload'];
+            $path = $addImage['path'];
             if ($upload) {
                 $image = new Image();
                 $image
                     ->setImagePath($path)
                     ->setNationalTeamId($_POST['nationalTeams']);
-                $upload = ImageRepository::saveToDB($connection, $image);
+                ImageRepository::saveToDB($connection, $image);
                 echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie dodane pomyślnie :)</strong>';
                 echo "</div>";

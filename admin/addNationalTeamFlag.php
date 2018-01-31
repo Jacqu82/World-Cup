@@ -9,8 +9,6 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
-//if for every page for logged user!!!
-
 $user = loggedUser($connection);
 
 if ($user->getRole() != 'admin') {
@@ -28,11 +26,14 @@ include '../widget/head.php';
 ?>
 <body>
 <?php
+
 include '../widget/header.php';
+
 ?>
 <div class="container text-center">
     <h1>World Cup 2018</h1>
     <hr/>
+    <h3>Dodaj flage reprezentacji</h3>
 
     <form method="POST" action="#" enctype="multipart/form-data">
         <div class="file forms">
@@ -40,14 +41,14 @@ include '../widget/header.php';
         </div>
         <br/>
         Wybierz reprezentacje:<br/>
-            <select name="nationalTeams" class="forms">
-                <?php
-                $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
-                foreach ($nationalTeams as $nationalTeam) {
-                    echo "<option value='" . $nationalTeam['id'] . "' class='forms'>" . $nationalTeam['name'] . "</option>";
-                }
-                ?>
-            </select>
+        <select name="nationalTeams" class="forms">
+            <?php
+            $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
+            foreach ($nationalTeams as $nationalTeam) {
+                echo "<option value='" . $nationalTeam['id'] . "' class='forms'>" . $nationalTeam['name'] . "</option>";
+            }
+            ?>
+        </select>
         <br/>
         <input type="hidden" name="action" value="saveImage"/>
         <button type="submit">Dodaj flage reprezentacji</button>
@@ -59,27 +60,34 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0)
             && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['nationalTeams'])) {
-            $nationalTeamId = $_POST['nationalTeams'];
-            $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/flags/' . $nationalTeamId . '/';
-            if (!file_exists($path)) {
-                mkdir($path);
-            }
-            $path .= $filename;
-            if (!file_exists($path)) {
-                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
-            } else {
-                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
-                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
-                echo "</div>";
-                die();
-            }
+	        $kindId = $_POST['nationalTeams'];
+	        $kind = 'flags';
+
+	        $addImage = ImageRepository::addImage($kind, $kindId);
+	        $upload = $addImage['upload'];
+	        $path = $addImage['path'];
+
+
+//            $filename = $_FILES['imageFile']['name'];
+//            $path = '../content/images/flags/' . $nationalTeamId . '/';
+//            if (!file_exists($path)) {
+//                mkdir($path);
+//            }
+//            $path .= $filename;
+//            if (!file_exists($path)) {
+//                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
+//            } else {
+//                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
+//                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
+//                echo "</div>";
+//                die();
+//            }
             if ($upload) {
                 $image = new Image();
                 $image
                     ->setImagePath($path)
                     ->setFlagId($_POST['nationalTeams']);
-                $upload = ImageRepository::saveToDB($connection, $image);
+                ImageRepository::saveToDB($connection, $image);
                 echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Flaga dodane pomyślnie :)</strong>';
                 echo "</div>";

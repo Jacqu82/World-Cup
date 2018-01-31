@@ -66,8 +66,8 @@ class UserRepository
             die("Query Error!" . $connection->errorInfo());
         }
 
-        $result->bindParam('username', $username);
-        $result->bindParam('id', $id);
+        $result->bindParam('username', $username, PDO::PARAM_STR);
+        $result->bindParam('id', $id, PDO::PARAM_INT);
         $result->execute();
 
         return true;
@@ -85,8 +85,8 @@ class UserRepository
             die("Query Error!" . $connection->errorInfo());
         }
 
-        $result->bindParam('email', $email);
-        $result->bindParam('id', $id);
+        $result->bindParam('email', $email, PDO::PARAM_STR);
+        $result->bindParam('id', $id, PDO::PARAM_INT);
         $result->execute();
 
         return true;
@@ -104,8 +104,8 @@ class UserRepository
             die("Query Error!" . $connection->errorInfo());
         }
 
-        $result->bindParam('password', $password);
-        $result->bindParam('id', $id);
+        $result->bindParam('password', $password, PDO::PARAM_STR);
+        $result->bindParam('id', $id, PDO::PARAM_INT);
         $result->execute();
 
         return true;
@@ -119,7 +119,7 @@ class UserRepository
             $sql = "DELETE FROM users WHERE id = :id";
             $result = $connection->prepare($sql);
 
-            $result->bindParam('id', $id);
+            $result->bindParam('id', $id, PDO::PARAM_INT);
             $result->execute();
 
             if ($result) {
@@ -141,7 +141,7 @@ class UserRepository
             die("Query Error!" . $connection->errorInfo());
         }
 
-        $result->bindParam('id', $id);
+        $result->bindParam('id', $id, PDO::PARAM_INT);
         $result->execute();
 
         if ($result->rowCount() > 0) {
@@ -198,7 +198,7 @@ class UserRepository
             die("Query Error!" . $connection->errorInfo());
         }
 
-        $result->bindParam('username', $username);
+        $result->bindParam('username', $username, PDO::PARAM_STR);
         $result->execute();
 
         return $result;
@@ -214,7 +214,7 @@ class UserRepository
         }
         //' OR 1=1 --
 
-        $result->bindParam('username', $username);
+        $result->bindParam('username', $username, PDO::PARAM_STR);
         $result->execute();
 
         if ($result->rowCount() > 0) {
@@ -237,7 +237,7 @@ class UserRepository
         $sql = "SELECT id, username FROM users WHERE id <> :user_id";
 
         $result = $connection->prepare($sql);
-        $result->bindParam('user_id', $userId);
+        $result->bindParam('user_id', $userId, PDO::PARAM_INT);
         $result->execute();
 
         $userArray = [];
@@ -250,5 +250,4 @@ class UserRepository
 
         return false;
     }
-
 }

@@ -31,7 +31,7 @@ include '../widget/header.php';
     <?php
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['delete_messege']) && isset($_POST['message_id'])) {
+        if (isset($_POST['delete_message']) && isset($_POST['message_id'])) {
             $messageId = $_POST['message_id'];
             $message = MessageRepository::loadMessageById($connection, $messageId);
             MessageRepository::delete($connection, $message);
@@ -48,7 +48,7 @@ include '../widget/header.php';
         echo $row['text'] . "<br/>";
         echo $row['created_at'] . "<br/>";
         echo "<form method='POST'>
-                <input type=\"submit\" class=\"btn btn-danger links\" name=\"delete_messege\" value=\"Usuń wiadomość\"/>
+                <input type=\"submit\" class=\"btn btn-danger links\" name=\"delete_message\" value=\"Usuń wiadomość\"/>
                 <input type='hidden' name='message_id' value='" . $row['id'] . " '>
               </form>";
         echo "<hr/>";

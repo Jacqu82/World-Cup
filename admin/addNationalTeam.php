@@ -1,12 +1,13 @@
 <?php
+
 require_once '../src/lib.php';
 require_once '../connection.php';
+
 session_start();
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
 }
-//if for every page for logged user!!!
 
 $user = loggedUser($connection);
 
@@ -67,14 +68,14 @@ include '../widget/header.php';
         </div>
         <div>
             Wybierz grupe:<br/>
-                <select name="groups" class="forms">
-                    <?php
-                    $groups = GroupRepository::loadAllGroups($connection);
-                    foreach ($groups as $group) {
-                        echo "<option value='" . $group['id'] . "'>" . $group['name'] . "</option>";
-                    }
-                    ?>
-                </select>
+            <select name="groups" class="forms">
+                <?php
+                $groups = GroupRepository::loadAllGroups($connection);
+                foreach ($groups as $group) {
+                    echo "<option value='" . $group['id'] . "'>" . $group['name'] . "</option>";
+                }
+                ?>
+            </select>
         </div>
         <div>
             <button type="submit" class="btn btn-success button">Dodaj</button>
@@ -85,8 +86,10 @@ include '../widget/header.php';
     <h3><a href="adminPanel.php" class="btn btn-default links">Powrót do panelu Admina</a></h3>
 </div>
 <?php
+
 include '../widget/footer.php';
 include '../widget/scripts.php';
+
 ?>
 </body>
 </html>

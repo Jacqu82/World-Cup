@@ -6,14 +6,12 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>World Cup 2018 - Rejestracja</title>
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
-    <link href="../css/style.css" rel="stylesheet">
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-</head>
+<?php
+
+include '../widget/head.php';
+
+?>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <body>
 <div class="container text-center">
     <h1>World Cup 2018 - stwórz darmowe konto</h1>
@@ -70,6 +68,7 @@ session_start();
             <button type="submit" class="btn btn-success button">Zarejestruj się</button>
         </div>
     </form>
+    <hr/>
     <a href="index.php" class="btn btn-default links">Powrót</a>
 </div>
 <?php

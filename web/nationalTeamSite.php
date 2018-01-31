@@ -73,7 +73,7 @@ include '../widget/header.php';
 
             <?php
         } else {
-            echo "<div class=\"text-center alert alert-success\">";
+            echo "<div class=\"alert alert-success\">";
             echo '<strong>Kibicujesz :)</strong>';
             echo "</div>";
         }
@@ -94,7 +94,6 @@ include '../widget/header.php';
     $groups = GroupRepository::loadAllGroupsById($connection, $_SESSION['group_id']);
     foreach ($groups as $group) {
         $id = $group['id'];
-
     }
 
     echo "<h3><a href='groupList.php?id=$id' class='btn btn-default links'>Powrót do grupy</a></h3>";

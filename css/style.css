@@ -1,6 +1,6 @@
 body
 {
-    background-image: url("dark.jpg");
+    background-image: url("../images/dark.jpg");
     color: #f2dede;
     /*font-family: 'Trocchi', serif;*/
 }
@@ -20,7 +20,7 @@ h1
     line-height: 48px;
 }
 
-.forms, #username, #password, #id
+.forms
 {
     width: 30%;
     padding: 12px 20px;
@@ -97,7 +97,8 @@ footer.footer
     border-radius: 4px;
 }
 
-.commentText {
+.commentText
+{
     background: rgba(255, 255, 255, 0.60);
     color: #000;
 
@@ -106,23 +107,27 @@ footer.footer
     resize: vertical;
 }
 
-.commentText:focus {
+.commentText:focus
+{
     border-color: #00579a;
     background: #fff;
 }
 
-.toggle-comment-form .toggle {
+.toggle-comment-form .toggle
+{
     font-weight: bold;
     cursor: pointer;
 }
 
 .toggle-comment-form .commentText,
-.toggle-comment-form button {
+.toggle-comment-form button
+{
     display: none;
 }
 
 .toggle-comment-form.s-expanded .commentText,
-.toggle-comment-form.s-expanded button {
+.toggle-comment-form.s-expanded button
+{
     display: block;
     width: 30%;
     margin: 0 auto;

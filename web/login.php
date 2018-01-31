@@ -11,7 +11,7 @@ if (isset($_POST['username']) || isset($_POST['password'])) {
 
     $user = UserRepository::loadUserByUsername($connection, $username);
     if (!$user) {
-        $_SESSION['error'] = 'Niepoprwany login lub hasło!';
+        $_SESSION['error'] = 'Niepoprawny login lub hasło!';
         header('Location: loginForm.php');
     }
     if (password_verify($password, $user->getPassword())) {
@@ -21,7 +21,7 @@ if (isset($_POST['username']) || isset($_POST['password'])) {
         unset($_SESSION['error']);
         header('Location: mainPage.php');
     } else {
-        $_SESSION['error'] = 'Niepoprwany login lub hasło!';
+        $_SESSION['error'] = 'Niepoprawny login lub hasło!';
         header('Location: loginForm.php');
     }
 } else {

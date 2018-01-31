@@ -9,8 +9,6 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
-//if for every page for logged user!!!
-
 $user = loggedUser($connection);
 
 if ($user->getRole() != 'admin') {
@@ -34,7 +32,7 @@ include '../widget/header.php';
 <div class="container text-center">
     <h1>World Cup 2018</h1>
     <hr/>
-    <h3>Witaj <?php echo $user->getUsername(). "!"; ?></h3>
+    <h3>Witaj <?php echo $user->getUsername() . "!"; ?></h3>
     <h3>Panel Administracyjny</h3>
 
     <a href="addNationalTeam.php" class="btn btn-success links">Dodaj reprezentacje do bazy</a>
