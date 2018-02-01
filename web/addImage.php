@@ -45,31 +45,24 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0)
             && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['userId'])) {
-            $userId = $_POST['userId'];
-            //$filename = $_FILES['imageFile']['name'] = $imageId . '_image';
-            $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/users/' . $userId . '/';
+            $kindId = $_POST['userId'];
+            $kind = 'users';
+
+            $addImage = ImageOperations::imageOperation($kind, $kindId);
+            $upload = $addImage['upload'];
+            $path = $addImage['path'];
+
+//            $filename = $_FILES['imageFile']['name'] = $kindId . '_image';
 //            $chmod = '../content';
-            if (!file_exists($path)) {
-                mkdir($path);
-//                chmod($chmod, 0777);
-//                chmod($path, 0777);
-            }
-            $path .= $filename;
-            if (!file_exists($path)) {
-                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
-            } else {
-                echo "<div class=\"text-center alert alert-danger\">";
-                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
-                echo "</div>";
-                die();
-            }
+//            chmod($chmod, 0777);
+//            chmod($path, 0777);
+
             if ($upload) {
                 $image = new Image();
                 $image
                     ->setImagePath($path)
                     ->setUserId($_POST['userId']);
-                $upload = ImageRepository::saveToDB($connection, $image);
+                ImageRepository::saveToDB($connection, $image);
                 echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie dodane pomyślnie :)</strong>';
                 echo "</div>";

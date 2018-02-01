@@ -9,8 +9,6 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
-//if for every page for logged user!!!
-
 $user = loggedUser($connection);
 
 if ($user->getRole() != 'admin') {
@@ -51,26 +49,15 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0) && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['image_id'])) {
             $imageId = $_POST['image_id'];
-            $userId = $_POST['user_id'];
+            $kindId = $_POST['user_id'];
+            $kind = 'users';
 
             $pathToDelete = ImageRepository::loadImagePath($connection, $imageId);
             unlink($pathToDelete);
 
-            $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/users/' . $userId . '/';
-            if (!file_exists($path)) {
-                mkdir($path);
-            }
-            $path .= $filename;
-            if (!file_exists($path)) {
-                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
-            } else {
-                echo "<div class=\"flash-message alert alert-danger alert-dismissible\" role=\"alert\">";
-                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
-                echo "</div>";
-                die();
-            }
-
+            $manageImage = ImageOperations::imageOperation($kind, $kindId);
+            $upload = $manageImage['upload'];
+            $path = $manageImage['path'];
             if ($upload) {
                 ImageRepository::updateImagePath($connection, $path, $imageId);
                 echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";

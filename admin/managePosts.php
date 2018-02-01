@@ -9,8 +9,6 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
-//if for every page for logged user!!!
-
 $user = loggedUser($connection);
 
 if ($user->getRole() != 'admin') {

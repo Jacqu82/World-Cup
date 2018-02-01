@@ -53,25 +53,15 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0) && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['image_id'])) {
             $imageId = $_POST['image_id'];
-            $nationalTeamId = $_POST['national_team_id'];
+            $kindId = $_POST['national_team_id'];
+            $kind = 'teams';
 
             $pathToDelete = ImageRepository::loadImagePath($connection, $imageId);
             unlink($pathToDelete);
 
-            $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/teams/' . $nationalTeamId . '/';
-            if (!file_exists($path)) {
-                mkdir($path);
-            }
-            $path .= $filename;
-            if (!file_exists($path)) {
-                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
-            } else {
-                echo "<div class=\"flash-message text-center alert alert-danger alert-dismissible\" role=\"alert\">";
-                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
-                echo "</div>";
-                die();
-            }
+            $editImage = ImageOperations::imageOperation($kind, $kindId);
+            $upload = $editImage['upload'];
+            $path = $editImage['path'];
 
             if ($upload) {
                 ImageRepository::updateImagePath($connection, $path, $imageId);

@@ -40,26 +40,15 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0) && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['user_id']) && isset($_POST['image_id'])) {
             $imageId = $_POST['image_id'];
-            $userId = $_POST['user_id'];
+            $kindId = $_POST['user_id'];
+            $kind = 'users';
 
             $pathToDelete = ImageRepository::loadImagePath($connection, $imageId);
             unlink($pathToDelete);
 
-            $filename = $_FILES['imageFile']['name'];
-            $path = '../content/images/users/' . $userId . '/';
-            if (!file_exists($path)) {
-                mkdir($path);
-            }
-            $path .= $filename;
-            if (!file_exists($path)) {
-                $upload = move_uploaded_file($_FILES['imageFile']['tmp_name'], $path);
-            } else {
-                echo "<div class=\"text-center alert alert-danger\">";
-                echo '<strong>Zdjęcie o podanej nazwie już istnieje!</strong>';
-                echo "</div>";
-                die();
-            }
-
+            $editImage = ImageOperations::imageOperation($kind, $kindId);
+            $upload = $editImage['upload'];
+            $path = $editImage['path'];
             if ($upload) {
                 ImageRepository::updateImagePath($connection, $path, $imageId);
                 echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";

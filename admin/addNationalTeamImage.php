@@ -2,7 +2,6 @@
 
 require_once '../src/lib.php';
 require_once '../connection.php';
-require_once 'autoload.php';
 
 session_start();
 if (!isset($_SESSION['login'])) {
@@ -42,14 +41,14 @@ include '../widget/header.php';
         </div>
         <br/>
         Wybierz reprezentacje:<br/>
-            <select name="nationalTeams" class="forms">
-                <?php
-                $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
-                foreach ($nationalTeams as $nationalTeam) {
-                    echo "<option value='" . $nationalTeam['id'] . "' class='forms'>" . $nationalTeam['name'] . "</option>";
-                }
-                ?>
-            </select>
+        <select name="nationalTeams" class="forms">
+            <?php
+            $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
+            foreach ($nationalTeams as $nationalTeam) {
+                echo "<option value='" . $nationalTeam['id'] . "' class='forms'>" . $nationalTeam['name'] . "</option>";
+            }
+            ?>
+        </select>
         <br/>
         <input type="hidden" name="action" value="saveImage"/>
         <button type="submit">Dodaj zdjęcie reprezentacji</button>
@@ -61,10 +60,10 @@ include '../widget/header.php';
         if (($_FILES['imageFile']['error'] == 0)
             && ($_FILES['imageFile']['type'] == 'image/jpeg')
             && isset($_POST['nationalTeams'])) {
-	        $kindId = $_POST['nationalTeams'];
+            $kindId = $_POST['nationalTeams'];
             $kind = 'teams';
 
-            $addImage = ImageRepository::addImage($kind, $kindId);
+            $addImage = ImageOperations::imageOperation($kind, $kindId);
             $upload = $addImage['upload'];
             $path = $addImage['path'];
             if ($upload) {
