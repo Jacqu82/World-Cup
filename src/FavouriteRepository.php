@@ -46,7 +46,7 @@ class FavouriteRepository
 
     public static function secureVote(PDO $connection, $userId, $nationalTeamId)
     {
-        $sql = "SELECT user_id, national_team_id FROM favourites
+        $sql = "SELECT id FROM favourites
                 WHERE user_id = :user_id AND national_team_id = :national_team_id";
 
         $result = $connection->prepare($sql);
@@ -61,5 +61,4 @@ class FavouriteRepository
         return $result;
 
     }
-
 }
