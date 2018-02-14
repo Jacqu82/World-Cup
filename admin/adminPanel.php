@@ -36,6 +36,8 @@ include '../widget/header.php';
     <h3>Panel Administracyjny</h3>
 
     <a href="addNationalTeam.php" class="btn btn-success links">Dodaj reprezentacje do bazy</a>
+    <a href="addGameToTimetable.php" class="btn btn-danger links">Dodaj mecz do terminarza</a>
+    <a href="groupGames.php" class="btn btn-primary links">Uzupełnij terminarz</a>
     <a href="addNationalTeamImage.php" class="btn btn-info links">Dodaj zdjęcia reprezentacji</a>
     <a href="editNationalTeamImages.php" class="btn btn-success links">Edytuj zdjęcia reprezentacji</a>
     <a href="managePosts.php" class="btn btn-primary links">Zarządzaj postami</a>

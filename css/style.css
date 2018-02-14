@@ -2,7 +2,8 @@ body
 {
     background-image: url("../images/dark.jpg");
     color: #f2dede;
-    /*font-family: 'Trocchi', serif;*/
+    font-family: 'Trocchi', serif;
+    letter-spacing: 1px;
 }
 
 .container
@@ -20,9 +21,27 @@ h1
     line-height: 48px;
 }
 
+h2
+{
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
 .forms
 {
     width: 30%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #0f192a;
+}
+
+.forms-goal
+{
+    width: 8%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
@@ -136,4 +155,13 @@ footer.footer
 .group-list
 {
     font-size: 22px;
+}
+
+table, th, td
+{
+    text-align: center;
+    border: 1px solid white;
+    padding: 5px;
+    width: 80%;
+    font-size: 18px;
 }

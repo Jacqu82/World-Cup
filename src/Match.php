@@ -1,14 +1,14 @@
 <?php
 
-
-class Game
+class Match
 {
     private $id;
+    private $round;
     private $groupId;
-    private $homeTeamId;
-    private $awayTeamId;
-    private $goalsHomeTeam;
-    private $goalsAwayTeam;
+    private $nationalTeam1Id;
+    private $nationalTeam2Id;
+    private $goalsFor;
+    private $goalsAgainst;
     private $city;
     private $date;
     private $hour;
@@ -16,11 +16,12 @@ class Game
     public function __construct()
     {
         $this->id = -1;
+        $this->round = 0;
         $this->groupId = -1;
-        $this->homeTeamId = -1;
-        $this->awayTeamId = -1;
-        $this->goalsHomeTeam = 0;
-        $this->goalsAwayTeam = 0;
+        $this->nationalTeam1Id = -1;
+        $this->nationalTeam2Id = -1;
+        $this->goalsFor = null;
+        $this->goalsAgainst = null;
         $this->city = '';
         $this->date = '';
         $this->hour = '';
@@ -45,6 +46,24 @@ class Game
     }
 
     /**
+     * @return null
+     */
+    public function getRound()
+    {
+        return $this->round;
+    }
+
+    /**
+     * @param null $round
+     * @return $this
+     */
+    public function setRound($round)
+    {
+        $this->round = $round;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getGroupId()
@@ -65,72 +84,72 @@ class Game
     /**
      * @return int
      */
-    public function getHomeTeamId()
+    public function getNationalTeam1Id()
     {
-        return $this->homeTeamId;
+        return $this->nationalTeam1Id;
     }
 
     /**
-     * @param int $homeTeamId
+     * @param int $nationalTeam1Id
      * @return $this
      */
-    public function setHomeTeamId($homeTeamId)
+    public function setNationalTeam1Id($nationalTeam1Id)
     {
-        $this->homeTeamId = $homeTeamId;
+        $this->nationalTeam1Id = $nationalTeam1Id;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getAwayTeamId()
+    public function getNationalTeam2Id()
     {
-        return $this->awayTeamId;
+        return $this->nationalTeam2Id;
     }
 
     /**
-     * @param int $awayTeamId
+     * @param int $nationalTeam2Id
      * @return $this
      */
-    public function setAwayTeamId($awayTeamId)
+    public function setNationalTeam2Id($nationalTeam2Id)
     {
-        $this->awayTeamId = $awayTeamId;
+        $this->nationalTeam2Id = $nationalTeam2Id;
         return $this;
     }
 
     /**
-     * @return int
+     * @return null
      */
-    public function getGoalsHomeTeam()
+    public function getGoalsFor()
     {
-        return $this->goalsHomeTeam;
+        return $this->goalsFor;
     }
 
     /**
-     * @param int $goalsHomeTeam
+     * @param null $goalsFor
      * @return $this
      */
-    public function setGoalsHomeTeam($goalsHomeTeam)
+    public function setGoalsFor($goalsFor)
     {
-        $this->goalsHomeTeam = $goalsHomeTeam;
+        $this->goalsFor = $goalsFor;
         return $this;
     }
 
     /**
-     * @return int
+     * @return null
      */
-    public function getGoalsAwayTeam()
+    public function getGoalsAgainst()
     {
-        return $this->goalsAwayTeam;
+        return $this->goalsAgainst;
     }
 
     /**
-     * @param int $goalsAwayTeam
+     * @param null $goalsAgainst
      * @return $this
      */
-    public function setGoalsAwayTeam($goalsAwayTeam)
+    public function setGoalsAgainst($goalsAgainst)
     {
-        $this->goalsAwayTeam = $goalsAwayTeam;
+        $this->goalsAgainst = $goalsAgainst;
         return $this;
     }
 
