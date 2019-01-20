@@ -1,7 +1,7 @@
 <?php
 
 require_once '../connection.php';
-require_once 'autoload.php';
+require_once '../autoload.php';
 require_once '../src/lib.php';
 
 session_start();

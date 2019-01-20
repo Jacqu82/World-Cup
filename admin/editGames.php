@@ -36,6 +36,21 @@ include '../widget/header.php';
         echo '<h4>' . $match['date'] . ' ' . $match['hour'] . ' - ' . $match['city'] . '</h4>';
         echo '<h2>' . $match['team1'] . ' - ' . $match['team2'] . '</h2>';
 
+//        $groupTable = new GroupTable();
+//        $groupTable
+//            ->setTeamId($match['team1_id'])
+//            ->setGroupId($_GET['id'])
+//            ->setRound(1)
+//            ->setWon($won)
+//            ->setDraw($draw)
+//            ->setLose($lose)
+//            ->setGoalsFor($match['goals_for'])
+//            ->setGoalsAgainst($match['goals_against'])
+//            ->setGoalsDiff($match['goals_for'] - $match['goals_against'])
+//            ->setPoints($points);
+//
+//        GroupTablesRepository::saveToDB($connection, $groupTable);
+
         if (($match['goals_for'] === null) && ($match['goals_against'] === null)) {
             ?>
             <form method="post" action="#">
@@ -46,16 +61,14 @@ include '../widget/header.php';
             </form>
             <hr/>
             <?php
-        } else {
 
-            $goalsFor = MatchRepository::loadGoalsByTeamId($connection, $match['home']);
-            var_dump($goalsFor);
+        } else {
             echo '<h2>' . $match['goals_for'] . ' : ' . $match['goals_against'] . '</h2>';
         }
     }
     ?>
 
-    <h3><a href="adminPanel.php" class="btn btn-default links">Powrót do panelu Admina</a></h3>
+    <h3><a href="groupGames.php" class="btn btn-default links">Powrót do grup</a></h3>
 </div>
 <?php
 include '../widget/footer.php';

@@ -42,8 +42,7 @@ class MatchRepository
 
     public static function loadAllMatchesByGroupIdAndRound(PDO $connection, $groupId, $round)
     {
-        $sql = "SELECT m.city, m.date, m.hour, n1.name as team1, n2.name as team2,
-                m.goals_for, m.goals_against 
+        $sql = "SELECT m.goals_for, m.goals_against, m.city, m.date, m.hour, n1.name as team1, n2.name as team2 
                 FROM matches m
                 LEFT JOIN national_teams n1 ON m.national_team_1_id = n1.id
                 LEFT JOIN national_teams n2 ON m.national_team_2_id = n2.id
@@ -60,9 +59,8 @@ class MatchRepository
 
     public static function loadAllMatchesByGroupId(PDO $connection, $groupId)
     {
-        $sql = "SELECT m.id, m.city, m.date, m.hour, n1.name as team1, n2.name as team2,
-                n1.id as home, n2.id as away,
-                m.goals_for, m.goals_against 
+        $sql = "SELECT m.id, m.goals_for, m.goals_against, m.city, m.date, m.hour, 
+                n1.name as team1, n2.name as team2, n1.id as team1_id, n2.id as team2_id 
                 FROM matches m
                 LEFT JOIN national_teams n1 ON m.national_team_1_id = n1.id
                 LEFT JOIN national_teams n2 ON m.national_team_2_id = n2.id
@@ -90,18 +88,72 @@ class MatchRepository
         return $result;
     }
 
-    public static function loadGoalsByTeamId(PDO $connection, $teamId)
+    public static function loadGoalsForHomeByTeamId(PDO $connection, $teamHome)
     {
-        $sql = "SELECT sum(goals_for) as gfor FROM matches
-                WHERE national_team_1_id = :team_id";
+        $sql = "SELECT sum(goals_for) as goalsFor FROM matches
+                WHERE national_team_1_id = :team_home";
 
         $result = $connection->prepare($sql);
-        $result->bindParam('team_id', $teamId, PDO::PARAM_INT);
+        $result->bindParam('team_home', $teamHome, PDO::PARAM_INT);
         $result->execute();
 
         if ($result->rowCount() > 0) {
             foreach ($result as $row) {
-                return $row['gfor'];
+                return $row['goalsFor'];
+            }
+        }
+
+        return false;
+    }
+
+    public static function loadGoalsForAwayByTeamId(PDO $connection, $teamAway)
+    {
+        $sql = "SELECT sum(goals_against) as goalsAgainst FROM matches
+                WHERE national_team_2_id = :team_away";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('team_away', $teamAway, PDO::PARAM_INT);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['goalsAgainst'];
+            }
+        }
+
+        return false;
+    }
+
+    public static function loadGoalsAgainstHomeByTeamId(PDO $connection, $teamHome)
+    {
+        $sql = "SELECT sum(goals_against) as goalsAgainst FROM matches
+                WHERE national_team_1_id = :team_home";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('team_home', $teamHome, PDO::PARAM_INT);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['goalsAgainst'];
+            }
+        }
+
+        return false;
+    }
+
+    public static function loadGoalsAgainstAwayByTeamId(PDO $connection, $teamAway)
+    {
+        $sql = "SELECT sum(goals_for) as goalsFor FROM matches
+                WHERE national_team_2_id = :team_away";
+
+        $result = $connection->prepare($sql);
+        $result->bindParam('team_away', $teamAway, PDO::PARAM_INT);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            foreach ($result as $row) {
+                return $row['goalsFor'];
             }
         }
 

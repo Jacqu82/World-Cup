@@ -57,6 +57,7 @@ include '../widget/header.php';
     <table align="center">
         <thead>
         <tr>
+            <th>Pozycja</th>
             <th>Reprezentacja</th>
             <th>Runda</th>
             <th>Zwycięstwa</th>
@@ -70,12 +71,22 @@ include '../widget/header.php';
         </thead>
         <?php
 
-        $teams = NationalTeamRepository::loadAllNationalTeamsByGroupId($connection, $_GET['id']);
-        foreach ($teams as $team) {
+        $matches = MatchRepository::loadAllMatchesByGroupId($connection, $_GET['id']);
+        foreach ($matches as $match) {
+
+//            $homeGoalsFor = MatchRepository::loadGoalsForHomeByTeamId($connection, $team['id']);
+//            $awayGoalsFor = MatchRepository::loadGoalsForAwayByTeamId($connection, $team['id']);
+//            $goalsFor = $homeGoalsFor + $awayGoalsFor;
+//            $homeGoalsAgainst = MatchRepository::loadGoalsAgainstHomeByTeamId($connection, $team['id']);
+//            $awayGoalsAgainst = MatchRepository::loadGoalsAgainstAwayByTeamId($connection, $team['id']);
+//            $goalsAgainst = $homeGoalsAgainst + $awayGoalsAgainst;
+
+
             ?>
             <tbody>
             <tr>
-                <td><?php echo $team['name']; ?></td>
+                <td></td>
+                <td><?php echo $match['team1'] ?></td>
                 <td></td>
                 <td></td>
                 <td></td>
