@@ -2,10 +2,12 @@
 
 namespace Service;
 
+use ImageService;
 use PDO;
 use Repository\CommentRepository;
 use Repository\FavouriteRepository;
 use Repository\GroupRepository;
+use Repository\GroupTableRepository;
 use Repository\ImageRepository;
 use Repository\MatchRepository;
 use Repository\MessageRepository;
@@ -36,6 +38,8 @@ class Container
     private $imageRepository;
 
     private $matchRepository;
+
+    private $groupTableRepository;
 
     private $motorCycleLoader;
 
@@ -181,6 +185,27 @@ class Container
         return $this->matchRepository;
     }
 
+    /**
+     * @return GroupTableRepository
+     */
+    public function getGroupTableRepository()
+    {
+        if ($this->groupTableRepository === null) {
+            $this->groupTableRepository = new GroupTableRepository($this->getPDO());
+        }
+
+        return $this->groupTableRepository;
+    }
+
+    public function getImageService()
+    {
+        if ($this->imageService === null) {
+            $this->imageService = new ImageService();
+        }
+
+        return $this->imageService;
+    }
+
 //    /**
 //     * @return CarLoader
 //     */
@@ -193,24 +218,4 @@ class Container
 //        return $this->carLoader;
 //    }
 
-//
-//    public function getImageService()
-//    {
-//        if ($this->imageService === null) {
-//            $this->imageService = new ImageService($this);
-//        }
-//
-//        return $this->imageService;
-//    }
-//
-
-//
-//    public function loggedAdmin()
-//    {
-//        if (isset($_SESSION['adminId'])) {
-//            return $this->getAdminRepository()->findOneById($_SESSION['adminId']);
-//        }
-//
-//        return false;
-//    }
 }

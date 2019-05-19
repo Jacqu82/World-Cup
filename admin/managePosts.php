@@ -1,15 +1,19 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
 }
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$postRepository = $container->getPostRepository();
 
 if ($user->getRole() != 'admin') {
     header('Location: ../web/mainPage.php');
@@ -44,7 +48,7 @@ include '../widget/header.php';
                     <strong>Post może mieć maksymalnie 150 znaków!</strong>
                 </div>';
             } else {
-                PostRepository::updatePostText($connection, $postId, $editText);
+                $postRepository->updatePostText($postId, $editText);
                 echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Post pomyślnie edytowany :)</strong>
@@ -54,8 +58,8 @@ include '../widget/header.php';
 
         if (isset($_POST['post_id']) && isset($_POST['delete_post'])) {
             $postId = $_POST['post_id'];
-            $postToDelete = PostRepository::loadPostById($connection, $postId);
-            PostRepository::delete($connection, $postToDelete);
+            $postToDelete = $postRepository->loadPostById($postId);
+            $postRepository->delete($postToDelete);
             echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Post pomyślnie usynięty :)</strong>
@@ -63,10 +67,10 @@ include '../widget/header.php';
         }
     }
 
-    $count = PostRepository::countAllPostsExceptAdmin($connection, $user->getId());
+    $count = $postRepository->countAllPostsExceptAdmin($user->getId());
     echo '<h3>Wszystkie posty ( ' . $count . ' )</h3>';
 
-    $posts = PostRepository::loadAllPostsExceptAdmin($connection, $user->getId());
+    $posts = $postRepository->loadAllPostsExceptAdmin($user->getId());
     foreach ($posts as $post) {
         echo 'Data utworzenia: ' . $post['created_at'] . '<br/>';
         echo $post['username'] . '<br/>';
@@ -99,6 +103,7 @@ include '../widget/header.php';
 
 include '../widget/footer.php';
 include '../widget/scripts.php';
+
 ?>
 </body>
 </html>

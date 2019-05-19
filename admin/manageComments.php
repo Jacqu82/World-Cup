@@ -1,22 +1,24 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
 }
-
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$commentRepository = $container->getCommentRepository();
 
 if ($user->getRole() != 'admin') {
     header('Location: ../web/mainPage.php');
 }
-
 
 ?>
 
@@ -47,7 +49,7 @@ include '../widget/header.php';
                     <strong>Komentarz może mieć maksymalnie 80 znaków!</strong>
                 </div>';
             } else {
-                CommentRepository::updateCommentText($connection, $commentId, $editComment);
+                $commentRepository->updateCommentText($commentId, $editComment);
                 echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Komentarz pomyślnie edytowany :)</strong>
@@ -57,8 +59,8 @@ include '../widget/header.php';
 
         if (isset($_POST['comment_id']) && isset($_POST['delete_comment'])) {
             $commentId = $_POST['comment_id'];
-            $commentToDelete = CommentRepository::loadCommentById($connection, $commentId);
-            CommentRepository::delete($connection, $commentToDelete);
+            $commentToDelete = $commentRepository->loadCommentById($commentId);
+            $commentRepository->delete($commentToDelete);
             echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Komentarz pomyślnie usynięty :)</strong>
@@ -66,10 +68,10 @@ include '../widget/header.php';
         }
     }
 
-    $countComments = CommentRepository::countAllCommentsExceptAdmin($connection, $user->getId());
+    $countComments = $commentRepository->countAllCommentsExceptAdmin($user->getId());
     echo '<h3>Wszystkie komentarze ( ' . $countComments . ' )</h3>';
 
-    $comments = CommentRepository::loadAllComments($connection, $user->getId());
+    $comments = $commentRepository->loadAllComments($user->getId());
     foreach ($comments as $comment) {
         echo 'Data utworzenia: ' . $comment['created_at'] . '<br/>';
         echo $comment['username'] . '<br/>';
@@ -103,6 +105,7 @@ include '../widget/header.php';
 
 include '../widget/footer.php';
 include '../widget/scripts.php';
+
 ?>
 </body>
 </html>

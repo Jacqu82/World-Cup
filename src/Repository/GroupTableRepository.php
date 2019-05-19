@@ -5,10 +5,16 @@ namespace Repository;
 use Model\GroupTable;
 use PDO;
 
-
-class GroupTablesRepository
+class GroupTableRepository
 {
-    public function saveToDB(PDO $connection, GroupTable $groupTable)
+    private $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function saveToDB(GroupTable $groupTable)
     {
         $id = $groupTable->getId();
         $teamId = $groupTable->getTeamId();
@@ -28,7 +34,7 @@ class GroupTablesRepository
                     VALUES (:team_id, :group_id, :round, :won, :draw, :lose, :goals_for,
                     :goals_against, :goals_diff, :points)";
 
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
             $result->bindParam('team_id', $teamId, PDO::PARAM_INT);
             $result->bindParam('group_id', $groupId, PDO::PARAM_INT);
             $result->bindParam('round', $round, PDO::PARAM_INT);
@@ -41,8 +47,9 @@ class GroupTablesRepository
             $result->bindParam('points', $points, PDO::PARAM_INT);
             $result->execute();
 
-            $teamId = $connection->lastInsertId();
-            $groupTable = GroupTablesRepository::loadGroupTableById($connection, $teamId);
+            $teamId = $this->pdo->lastInsertId();
+            $groupTable = $this->loadGroupTableById($teamId);
+
             return $groupTable;
 
         } elseif ($id != -1) {
@@ -58,7 +65,7 @@ class GroupTablesRepository
                                             points = points + :points
                     WHERE id = :id";
 
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
             $result->bindParam('id', $id, PDO::PARAM_INT);
             $result->bindParam('team_id', $teamId, PDO::PARAM_INT);
             $result->bindParam('group_id', $groupId, PDO::PARAM_INT);
@@ -72,18 +79,19 @@ class GroupTablesRepository
             $result->bindParam('points', $points, PDO::PARAM_INT);
             $result->execute();
 
-            $groupTable = GroupTablesRepository::loadGroupTableById($connection, $teamId);
+            $groupTable = GroupTableRepository::loadGroupTableById($teamId);
+
             return $groupTable;
         }
 
         return false;
     }
 
-    public function loadGroupTableById(PDO $connection, $teamId)
+    public function loadGroupTableById($teamId)
     {
         $sql = "SELECT * FROM group_tables WHERE team_id = :team_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('team_id', $teamId);
         $result->execute();
 

@@ -14,7 +14,7 @@ class UserRepository
         $this->pdo = $pdo;
     }
 
-    public function saveToDB(PDO $connection, User $user)
+    public function saveToDB(User $user)
     {
         $id = $user->getId();
         $username = $user->getUsername();
@@ -26,7 +26,7 @@ class UserRepository
             $sql = "INSERT INTO users (username, email, password, role) 
                     VALUES (:username, :email, :password, :role)";
 
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
             $result->bindParam('username', $username, PDO::PARAM_STR);
             $result->bindParam('email', $email, PDO::PARAM_STR);
             $result->bindParam('password', $password, PDO::PARAM_STR);
@@ -34,22 +34,24 @@ class UserRepository
 
             $result->execute();
             //last insert id!!!!!
-            $id = $connection->lastInsertId();
+            $id = $this->pdo->lastInsertId();
+
             return true;
         }
+
         return false;
     }
 
-    public function updateUsername(PDO $connection, User $user)
+    public function updateUsername(User $user)
     {
         $id = $user->getId();
         $username = $user->getUsername();
 
         $sql = "UPDATE users SET username = :username WHERE id = :id";
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
 
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('username', $username, PDO::PARAM_STR);
@@ -59,16 +61,16 @@ class UserRepository
         return true;
     }
 
-    public function updateEmail(PDO $connection, User $user)
+    public function updateEmail(User $user)
     {
         $id = $user->getId();
         $email = $user->getEmail();
 
         $sql = "UPDATE users SET email = :email WHERE id = :id";
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
 
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('email', $email, PDO::PARAM_STR);
@@ -78,16 +80,16 @@ class UserRepository
         return true;
     }
 
-    public function updatePassword(PDO $connection, User $user)
+    public function updatePassword(User $user)
     {
         $id = $user->getId();
         $password = $user->getPassword();
 
         $sql = "UPDATE users SET password = :password WHERE id = :id";
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
 
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('password', $password, PDO::PARAM_STR);
@@ -97,13 +99,13 @@ class UserRepository
         return true;
     }
 
-    public function delete(PDO $connection, User $user)
+    public function delete(User $user)
     {
         $id = $user->getId();
 
         if ($id != -1) {
             $sql = "DELETE FROM users WHERE id = :id";
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
 
             $result->bindParam('id', $id, PDO::PARAM_INT);
             $result->execute();
@@ -112,8 +114,10 @@ class UserRepository
                 $id = -1;
                 return true;
             }
+
             return false;
         }
+
         return true;
     }
 
@@ -162,12 +166,12 @@ class UserRepository
         return $result;
     }
 
-    public function loadAllUsersByEmail(PDO $connection, $email)
+    public function loadAllUsersByEmail($email)
     {
         $sql = "SELECT id FROM users WHERE email = :email";
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('email', $email);
@@ -176,13 +180,13 @@ class UserRepository
         return $result;
     }
 
-    public function loadAllUsersByUsername(PDO $connection, $username)
+    public function loadAllUsersByUsername($username)
     {
         $sql = "SELECT id FROM users WHERE username = :username";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('username', $username, PDO::PARAM_STR);

@@ -1,15 +1,18 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
 }
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
 
 if ($user->getRole() != 'admin') {
     header('Location: ../web/mainPage.php');

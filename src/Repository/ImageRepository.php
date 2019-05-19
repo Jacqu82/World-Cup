@@ -14,7 +14,7 @@ class ImageRepository
         $this->pdo = $pdo;
     }
 
-    public function saveToDB(PDO $connection, Image $image)
+    public function saveToDB(Image $image)
     {
         $id = $image->getId();
         $imagePath = $image->getImagePath();
@@ -26,16 +26,18 @@ class ImageRepository
             $sql = "INSERT INTO images (image_path, user_id, national_team_id, flag_id) 
                     VALUES (:image_path, :user_id, :national_team_id, :flag_id)";
 
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
             $result->bindParam('image_path', $imagePath);
             $result->bindParam('user_id', $userId);
             $result->bindParam('national_team_id', $nationalTeamId);
             $result->bindParam('flag_id', $flagId);
             $result->execute();
 
-            $id = $connection->lastInsertId();
+            $id = $this->pdo->lastInsertId();
+
             return true;
         }
+
         return false;
     }
 
@@ -59,13 +61,13 @@ class ImageRepository
         return $imageArray;
     }
 
-    public function loadNationalTeamImageDetails(PDO $connection)
+    public function loadNationalTeamImageDetails()
     {
         $sql = "SELECT * FROM images WHERE national_team_id IS NOT NULL";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $imageArray = [];
@@ -74,16 +76,17 @@ class ImageRepository
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $imageArray[] = $row;
         }
+
         return $imageArray;
     }
 
-    public function loadNationalTeamFlag(PDO $connection)
+    public function loadNationalTeamFlag()
     {
         $sql = "SELECT * FROM images WHERE flag_id IS NOT NULL";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $imageArray = [];
@@ -92,19 +95,20 @@ class ImageRepository
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $imageArray[] = $row;
         }
+
         return $imageArray;
     }
 
-    public function loadUsersImageDetails(PDO $connection, $id)
+    public function loadUsersImageDetails($id)
     {
         $sql = "SELECT i.id, i.image_path, i.user_id, u.username FROM images i 
                 LEFT JOIN users u ON i.user_id = u.id
                 WHERE user_id IS NOT NULL 
                 AND user_id <> :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $imageArray = [];
@@ -176,13 +180,13 @@ class ImageRepository
         return null;
     }
 
-    public function loadImagePath(PDO $connection, $id)
+    public function loadImagePath($id)
     {
         $sql = "SELECT image_path FROM images WHERE id = :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('id', $id);
@@ -194,14 +198,14 @@ class ImageRepository
         return $path;
     }
 
-    public function loadImageById(PDO $connection, $id)
+    public function loadImageById($id)
     {
         $sql = "SELECT * FROM images WHERE id = :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
 
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('id', $id);
@@ -222,13 +226,13 @@ class ImageRepository
         return false;
     }
 
-    public function delete(PDO $connection, Image $image)
+    public function delete(Image $image)
     {
         $id = $image->getId();
 
         if ($id != -1) {
             $sql = "DELETE FROM images WHERE id = :id";
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
 
             $result->bindParam('id', $id);
             $result->execute();
@@ -263,32 +267,32 @@ class ImageRepository
         return false;
     }
 
-    public function updateImagePath(PDO $connection, $path, $id)
+    public function updateImagePath($path, $id)
     {
         $sql = "UPDATE images SET image_path = :image_path WHERE id = :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('image_path', $path);
         $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         return $result;
     }
 
-    public function countAllImagesExceptAdmin(PDO $connection, $id)
+    public function countAllImagesExceptAdmin($id)
     {
         $sql = "SELECT count(id) as countImages FROM images WHERE user_id <> :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         if ($result->rowCount() > 0) {

@@ -1,9 +1,12 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Model\Image;
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
@@ -11,7 +14,8 @@ if (!isset($_SESSION['login'])) {
 
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
 
 if ($user->getRole() != 'admin') {
     header('Location: ../web/mainPage.php');
@@ -43,7 +47,7 @@ include '../widget/header.php';
         Wybierz reprezentacje:<br/>
         <select name="nationalTeams" class="forms">
             <?php
-            $nationalTeams = NationalTeamRepository::loadAllNationalTeams($connection);
+            $nationalTeams = $container->getNationalTeamRepository()->loadAllNationalTeams();
             foreach ($nationalTeams as $nationalTeam) {
                 echo "<option value='" . $nationalTeam['id'] . "' class='forms'>" . $nationalTeam['name'] . "</option>";
             }
@@ -63,7 +67,7 @@ include '../widget/header.php';
             $kindId = $_POST['nationalTeams'];
             $kind = 'teams';
 
-            $addImage = ImageOperations::imageOperation($kind, $kindId);
+            $addImage = $container->getImageService()->imageOperation($kind, $kindId);
             $upload = $addImage['upload'];
             $path = $addImage['path'];
             if ($upload) {
@@ -71,7 +75,7 @@ include '../widget/header.php';
                 $image
                     ->setImagePath($path)
                     ->setNationalTeamId($_POST['nationalTeams']);
-                ImageRepository::saveToDB($connection, $image);
+                $container->getImageRepository()->saveToDB($image);
                 echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie dodane pomyślnie :)</strong>';
                 echo "</div>";

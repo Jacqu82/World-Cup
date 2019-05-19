@@ -115,35 +115,35 @@ class CommentRepository
         return false;
     }
 
-    public function countAllComments(PDO $connection)
-    {
-        $sql = "SELECT count(id) as countComments FROM comments";
+//    public function countAllComments(PDO $connection)
+//    {
+//        $sql = "SELECT count(id) as countComments FROM comments";
+//
+//        $result = $connection->prepare($sql);
+//        $result->execute();
+//
+//        if (!$result) {
+//            die("Connection Error" . $connection->errorInfo());
+//        }
+//
+//        if ($result->rowCount() > 0) {
+//            foreach ($result as $row) {
+//                return $row['countComments'];
+//            }
+//        }
+//        return false;
+//    }
 
-        $result = $connection->prepare($sql);
-        $result->execute();
-
-        if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
-        }
-
-        if ($result->rowCount() > 0) {
-            foreach ($result as $row) {
-                return $row['countComments'];
-            }
-        }
-        return false;
-    }
-
-    public function countAllCommentsExceptAdmin(PDO $connection, $id)
+    public function countAllCommentsExceptAdmin($id)
     {
         $sql = "SELECT count(id) as countComments FROM comments WHERE user_id <> :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         if ($result->rowCount() > 0) {
@@ -221,19 +221,19 @@ class CommentRepository
         return true;
     }
 
-    public function loadAllComments(PDO $connection, $id)
+    public function loadAllComments($id)
     {
         $sql = "SELECT c.id, c.text, c.created_at, u.username FROM comments c 
                 LEFT JOIN users u ON c.user_id = u.id
                 WHERE user_id <> :id
                 ORDER BY created_at DESC";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         return $result;

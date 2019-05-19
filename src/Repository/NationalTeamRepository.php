@@ -14,27 +14,28 @@ class NationalTeamRepository
         $this->pdo = $pdo;
     }
 
-    public function saveToDB(PDO $connection, NationalTeam $nationalTeam)
+    public function saveToDB(NationalTeam $nationalTeam)
     {
         $id = $nationalTeam->getId();
         $name = $nationalTeam->getName();
         $coach = $nationalTeam->getCoach();
         $groupId = $nationalTeam->getGroupId();
 
-
         if ($id == -1) {
             $sql = "INSERT INTO national_teams (name, coach, group_id) VALUES (:name, :coach, :group_id)";
 
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
             $result->bindParam('name', $name, PDO::PARAM_STR);
             $result->bindParam('coach', $coach, PDO::PARAM_STR);
             $result->bindParam('group_id', $groupId, PDO::PARAM_STR);
 
             $result->execute();
             //last insert id!!!!!
-            $id = $connection->lastInsertId();
+            $id = $this->pdo->lastInsertId();
+
             return true;
         }
+
         return false;
     }
 
@@ -83,12 +84,12 @@ class NationalTeamRepository
         return false;
     }
 
-    public function loadAllNationalTeams(PDO $connection)
+    public function loadAllNationalTeams()
     {
         $sql = "SELECT id, name FROM national_teams";
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->execute();

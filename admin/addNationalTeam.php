@@ -1,15 +1,19 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Model\NationalTeam;
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
 }
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
 
 if ($user->getRole() != 'admin') {
     header('Location: ../web/mainPage.php');
@@ -43,7 +47,7 @@ include '../widget/header.php';
                 ->setName($name)
                 ->setCoach($coach)
                 ->setGroupId($groupId);
-            if (NationalTeamRepository::saveToDB($connection, $nationalTeam)) {
+            if ($container->getNationalTeamRepository()->saveToDB($nationalTeam)) {
                 echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Poprawnie dodano reprezentację do bazy</strong>';
                 echo "</div>";
@@ -70,7 +74,7 @@ include '../widget/header.php';
             Wybierz grupe:<br/>
             <select name="groups" class="forms">
                 <?php
-                $groups = GroupRepository::loadAllGroups($connection);
+                $groups = $container->getGroupRepository()->loadAllGroups();
                 foreach ($groups as $group) {
                     echo "<option value='" . $group['id'] . "'>" . $group['name'] . "</option>";
                 }

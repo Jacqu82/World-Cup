@@ -1,15 +1,19 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
 }
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$imageRepository = $container->getImageRepository();
 
 if ($user->getRole() != 'admin') {
     header('Location: ../web/mainPage.php');
@@ -37,10 +41,10 @@ include '../widget/header.php';
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'updateImage') {
         if (isset($_POST['delete_image']) && isset($_POST['image_id'])) {
             $imageId = $_POST['image_id'];
-            $path = ImageRepository::loadImagePath($connection, $imageId);
+            $path = $imageRepository->loadImagePath($imageId);
             unlink($path);
-            $toDelete = ImageRepository::loadImageById($connection, $imageId);
-            ImageRepository::delete($connection, $toDelete);
+            $toDelete = $imageRepository->loadImageById($imageId);
+            $imageRepository->delete($toDelete);
             echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
             echo '<strong>Zdjęcie poprawnie usunięte :)</strong>';
             echo "</div>";
@@ -52,14 +56,14 @@ include '../widget/header.php';
             $kindId = $_POST['user_id'];
             $kind = 'users';
 
-            $pathToDelete = ImageRepository::loadImagePath($connection, $imageId);
+            $pathToDelete = $imageRepository->loadImagePath($imageId);
             unlink($pathToDelete);
 
-            $manageImage = ImageOperations::imageOperation($kind, $kindId);
+            $manageImage = $container->getImageService()->imageOperation($kind, $kindId);
             $upload = $manageImage['upload'];
             $path = $manageImage['path'];
             if ($upload) {
-                ImageRepository::updateImagePath($connection, $path, $imageId);
+                $imageRepository->updateImagePath($path, $imageId);
                 echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie poprawnie edytowane :)</strong>';
                 echo "</div>";
@@ -72,10 +76,10 @@ include '../widget/header.php';
         }
     }
 
-    $countImages = ImageRepository::countAllImagesExceptAdmin($connection, $user->getId());
+    $countImages = $imageRepository->countAllImagesExceptAdmin($user->getId());
     echo '<h3>Wszystkie zdjęcia ( ' . $countImages . ' )</h3>';
 
-    $images = ImageRepository::loadUsersImageDetails($connection, $user->getId());
+    $images = $imageRepository->loadUsersImageDetails($user->getId());
     foreach ($images as $image) {
 
         ?>

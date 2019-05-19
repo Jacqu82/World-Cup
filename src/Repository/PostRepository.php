@@ -52,19 +52,19 @@ class PostRepository
         return $result;
     }
 
-    public function loadAllPostsExceptAdmin(PDO $connection, $id)
+    public function loadAllPostsExceptAdmin($id)
     {
         $sql = "SELECT p.id, p.text, p.created_at, u.username FROM posts p 
                 LEFT JOIN users u ON p.user_id = u.id
                 WHERE user_id <> :id
                 ORDER BY created_at DESC";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         return $result;
@@ -108,17 +108,17 @@ class PostRepository
         return false;
     }
 
-    public function countAllPostsExceptAdmin(PDO $connection, $id)
+    public function countAllPostsExceptAdmin($id)
     {
         $sql = "SELECT count(id) as count FROM posts
                 WHERE user_id <> :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         if ($result->rowCount() > 0) {

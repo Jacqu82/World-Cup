@@ -72,8 +72,10 @@ include '../widget/head.php';
     <a href="index.php" class="btn btn-default links">Powrót</a>
 </div>
 <?php
+
 include '../widget/footer.php';
 include '../widget/scripts.php';
+
 ?>
 </body>
 </html>

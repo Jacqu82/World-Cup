@@ -1,13 +1,22 @@
 <?php
-require_once '../src/lib.php';
-require_once '../connection.php';
+
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Model\GroupTable;
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
 }
 //if for every page for logged user!!!
-$user = loggedUser($connection);
+
+$container = new Container($configuration);
+$matchRepository = $container->getMatchRepository();
+$groupTableRepository = $container->getGroupTableRepository();
+
 ?>
 
 <!DOCTYPE html>
@@ -24,18 +33,13 @@ include '../widget/header.php';
     <hr/>
     <?php
 
-
-
     $groupId = $_GET['id'];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['match_id']) && isset($_POST['goals_for']) && isset($_POST['goals_against'])) {
-            MatchRepository::updateMatchGoalsByMatchId(
-                    $connection, $_POST['match_id'], $_POST['goals_for'], $_POST['goals_against']);
+            $matchRepository->updateMatchGoalsByMatchId($_POST['match_id'], $_POST['goals_for'], $_POST['goals_against']);
 
-
-            $matchId = MatchRepository::findOneById($connection, $_POST['match_id']);
-            //var_dump(MatchRepository::findOneById($connection, $_POST['match_id']));die;
+            $matchId = $matchRepository->findOneById($_POST['match_id']);
 
             $groupTableHome = new GroupTable();
             $groupTableHome
@@ -50,7 +54,7 @@ include '../widget/header.php';
                 ->setGoalsDiff(2 - 2)
                 ->setPoints(1);
 
-            GroupTablesRepository::saveToDB($connection, $groupTableHome);
+            $groupTableRepository->saveToDB($groupTableHome);
 
             $groupTableAway = new GroupTable();
             $groupTableAway
@@ -65,14 +69,14 @@ include '../widget/header.php';
                 ->setGoalsDiff(3 - 3)
                 ->setPoints(1);
 
-            GroupTablesRepository::saveToDB($connection, $groupTableAway);
+            $groupTableRepository->saveToDB($groupTableAway);
 
             header('Location: editGames.php?id=' . $groupId);
         }
     }
 
-    $matches = MatchRepository::loadAllMatchesByGroupId($connection, $groupId);
-    //var_dump($matches);die;
+    $matches = $matchRepository->loadAllMatchesByGroupId($groupId);
+    //dump($matches);die;
     foreach ($matches as $match) {
         //var_dump($match);
         echo '<h4>' . $match['date'] . ' ' . $match['hour'] . ' - ' . $match['city'] . '</h4>';

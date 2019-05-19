@@ -1,17 +1,20 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Model\Image;
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
 }
-
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
 
 ?>
 
@@ -48,7 +51,7 @@ include '../widget/header.php';
             $kindId = $_POST['userId'];
             $kind = 'users';
 
-            $addImage = ImageOperations::imageOperation($kind, $kindId);
+            $addImage = $container->getImageService()->imageOperation($kind, $kindId);
             $upload = $addImage['upload'];
             $path = $addImage['path'];
 
@@ -62,7 +65,7 @@ include '../widget/header.php';
                 $image
                     ->setImagePath($path)
                     ->setUserId($_POST['userId']);
-                ImageRepository::saveToDB($connection, $image);
+                $container->getImageRepository()->saveToDB($image);
                 echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Zdjęcie dodane pomyślnie :)</strong>';
                 echo "</div>";
@@ -79,8 +82,10 @@ include '../widget/header.php';
     <h3><a href="userPanel.php" class="btn btn-default links">Powrót do profilu</a></h3>
 </div>
 <?php
+
 include '../widget/footer.php';
 include '../widget/scripts.php';
+
 ?>
 </body>
 </html>

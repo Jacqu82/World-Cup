@@ -2,8 +2,13 @@
 
 session_start();
 
-require_once '../connection.php';
-require_once '../autoload.php';
+require __DIR__ . '/../autoload.php';
+
+use Model\User;
+use Service\Container;
+
+$container = new Container($configuration);
+$userRepository = $container->getUserRepository();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])) {
@@ -22,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         //check exiting username
-        $users = UserRepository::loadAllUsersByUsername($connection, $username);
+        $users = $userRepository->loadAllUsersByUsername($username);
         if ($users->rowCount() > 0) {
             $is_ok = false;
             $_SESSION['e_username'] = 'Login ' . $_POST['username'] . ' już znajduje się w bazie danych! Wybierz inny!';
@@ -37,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         //check unique email
-        $emails = UserRepository::loadAllUsersByEmail($connection, $email);
+        $emails = $userRepository->loadAllUsersByEmail($email);
         if ($emails->rowCount() > 0) {
             $is_ok = false;
             $_SESSION['e_email'] = 'Adres ' . $_POST['email'] . ' już istnieje w bazie danych!';
@@ -77,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ->setUsername($username)
                 ->setEmail($email)
                 ->setPassword($password);
-            UserRepository::saveToDB($connection, $user);
+            $userRepository->saveToDB($user);
 
             $_SESSION['register_success'] = true;
             header('Location: registerSuccess.php');

@@ -1,17 +1,20 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: ../web/index.php');
     exit();
 }
-
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$imageRepository = $container->getImageRepository();
 
 if ($user->getRole() != 'admin') {
     header('Location: ../web/mainPage.php');
@@ -41,10 +44,10 @@ include '../widget/header.php';
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'updateImage') {
         if (isset($_POST['delete_image']) && isset($_POST['image_id'])) {
             $imageId = $_POST['image_id'];
-            $path = ImageRepository::loadImagePath($connection, $imageId);
+            $path = $imageRepository->loadImagePath($imageId);
             unlink($path);
-            $toDelete = ImageRepository::loadImageById($connection, $imageId);
-            ImageRepository::delete($connection, $toDelete);
+            $toDelete = $imageRepository->loadImageById($imageId);
+            $imageRepository->delete($toDelete);
             echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
             echo '<strong>Flaga poprawnie usunięta :)</strong>';
             echo "</div>";
@@ -56,14 +59,14 @@ include '../widget/header.php';
             $kindId = $_POST['national_team_id'];
             $kind = 'flags';
 
-            $pathToDelete = ImageRepository::loadImagePath($connection, $imageId);
+            $pathToDelete = $imageRepository->loadImagePath($imageId);
             unlink($pathToDelete);
 
-            $editImage = ImageOperations::imageOperation($kind, $kindId);
+            $editImage = $container->getImageService()->imageOperation($kind, $kindId);
             $upload = $editImage['upload'];
             $path = $editImage['path'];
             if ($upload) {
-                ImageRepository::updateImagePath($connection, $path, $imageId);
+                $imageRepository->updateImagePath($path, $imageId);
                 echo "<div class=\"flash-message text-center alert alert-success alert-dismissible\" role=\"alert\">";
                 echo '<strong>Flaga poprawnie edytowana :)</strong>';
                 echo "</div>";
@@ -76,7 +79,7 @@ include '../widget/header.php';
         }
     }
 
-    $images = ImageRepository::loadNationalTeamFlag($connection);
+    $images = $imageRepository->loadNationalTeamFlag();
     foreach ($images as $image) {
 
         ?>
