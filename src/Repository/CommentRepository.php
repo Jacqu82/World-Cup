@@ -1,9 +1,20 @@
 <?php
 
+namespace Repository;
+
+use Model\Comment;
+use PDO;
 
 class CommentRepository
 {
-    public static function saveToDB(PDO $connection, Comment $comment)
+    private $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function saveToDB(Comment $comment)
     {
         $id = $comment->getId();
         $userId = $comment->getUserId();
@@ -14,64 +25,65 @@ class CommentRepository
             $sql = "INSERT INTO comments (user_id, post_id, text)
                     VALUES (:user_id, :post_id, :text)";
 
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
             $result->bindParam('user_id', $userId);
             $result->bindParam('post_id', $postId);
             $result->bindParam('text', $text);
 
             $result->execute();
-            $id = $connection->lastInsertId();
+            $id = $this->pdo->lastInsertId();
+
             return true;
         }
 
         return false;
     }
 
-    public static function loadAllCommentsByUserId(PDO $connection, $userId)
+    public function loadAllCommentsByUserId($userId)
     {
         $sql = "SELECT c.id, c.text, c.created_at FROM comments c
                 WHERE user_id = :user_id
                 ORDER BY c.created_at DESC";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         return $result;
     }
 
-    public static function loadAllCommentsByPostId(PDO $connection, $postId)
+    public function loadAllCommentsByPostId($postId)
     {
         $sql = "SELECT c.text, c.created_at, u.username FROM comments c
                 LEFT JOIN users u ON c.user_id = u.id
                 WHERE post_id = :post_id
                 ORDER BY created_at DESC";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('post_id', $postId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         return $result;
     }
 
-    public static function countAllCommentsByPostId(PDO $connection, $postId)
+    public function countAllCommentsByPostId($postId)
     {
         $sql = "SELECT count(id) as count FROM comments WHERE post_id = :post_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('post_id', $postId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         if ($result->rowCount() > 0) {
@@ -82,16 +94,16 @@ class CommentRepository
         return false;
     }
 
-    public static function countAllCommentsByUserId(PDO $connection, $userId)
+    public function countAllCommentsByUserId($userId)
     {
         $sql = "SELECT count(id) as countComments FROM comments WHERE user_id = :user_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         if ($result->rowCount() > 0) {
@@ -99,10 +111,11 @@ class CommentRepository
                 return $row['countComments'];
             }
         }
+
         return false;
     }
 
-    public static function countAllComments(PDO $connection)
+    public function countAllComments(PDO $connection)
     {
         $sql = "SELECT count(id) as countComments FROM comments";
 
@@ -121,7 +134,7 @@ class CommentRepository
         return false;
     }
 
-    public static function countAllCommentsExceptAdmin(PDO $connection, $id)
+    public function countAllCommentsExceptAdmin(PDO $connection, $id)
     {
         $sql = "SELECT count(id) as countComments FROM comments WHERE user_id <> :id";
 
@@ -142,30 +155,30 @@ class CommentRepository
         return false;
     }
 
-    public static function updateCommentText(PDO $connection, $id, $text)
+    public function updateCommentText($id, $text)
     {
 
         $sql = "UPDATE comments SET text = :text WHERE id = :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('text', $text);
         $result->bindParam('id', $id);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         return $result;
     }
 
-    public static function loadCommentById(PDO $connection, $id)
+    public function loadCommentById($id)
     {
         $sql = "SELECT * FROM comments WHERE id = :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('id', $id);
@@ -187,13 +200,13 @@ class CommentRepository
         return false;
     }
 
-    public static function delete(PDO $connection, Comment $comment)
+    public function delete(Comment $comment)
     {
         $id = $comment->getId();
 
         if ($id != -1) {
             $sql = "DELETE FROM comments WHERE id = :id";
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
 
             $result->bindParam('id', $id);
             $result->execute();
@@ -204,10 +217,11 @@ class CommentRepository
             }
             return false;
         }
+
         return true;
     }
 
-    public static function loadAllComments(PDO $connection, $id)
+    public function loadAllComments(PDO $connection, $id)
     {
         $sql = "SELECT c.id, c.text, c.created_at, u.username FROM comments c 
                 LEFT JOIN users u ON c.user_id = u.id

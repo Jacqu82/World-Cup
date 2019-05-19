@@ -1,34 +1,20 @@
 <?php
 
+namespace Repository;
+
+use Model\User;
+use PDO;
 
 class UserRepository
 {
+    private $pdo;
 
-    public static function loadSql(PDO $connection)
+    public function __construct(PDO $pdo)
     {
-        $sql = "SELECT * FROM users";
-        $result = $connection->prepare($sql);
-        if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
-        }
-
-        $result->execute();
-        $array = [];
-        if ($result->rowCount() > 0) {
-//            foreach ($result as $row) {
-//                return $row;
-//            }
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $array[] = $row;
-            }
-            return $array;
-        }
-
-        return false;
+        $this->pdo = $pdo;
     }
 
-
-    public static function saveToDB(PDO $connection, User $user)
+    public function saveToDB(PDO $connection, User $user)
     {
         $id = $user->getId();
         $username = $user->getUsername();
@@ -54,7 +40,7 @@ class UserRepository
         return false;
     }
 
-    public static function updateUsername(PDO $connection, User $user)
+    public function updateUsername(PDO $connection, User $user)
     {
         $id = $user->getId();
         $username = $user->getUsername();
@@ -73,7 +59,7 @@ class UserRepository
         return true;
     }
 
-    public static function updateEmail(PDO $connection, User $user)
+    public function updateEmail(PDO $connection, User $user)
     {
         $id = $user->getId();
         $email = $user->getEmail();
@@ -92,7 +78,7 @@ class UserRepository
         return true;
     }
 
-    public static function updatePassword(PDO $connection, User $user)
+    public function updatePassword(PDO $connection, User $user)
     {
         $id = $user->getId();
         $password = $user->getPassword();
@@ -111,7 +97,7 @@ class UserRepository
         return true;
     }
 
-    public static function delete(PDO $connection, User $user)
+    public function delete(PDO $connection, User $user)
     {
         $id = $user->getId();
 
@@ -132,13 +118,13 @@ class UserRepository
     }
 
 
-    public static function loadUserById(PDO $connection, $id)
+    public function loadUserById($id)
     {
         $sql = "SELECT * FROM users WHERE id = :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('id', $id, PDO::PARAM_INT);
@@ -154,19 +140,20 @@ class UserRepository
                 ->setHash($row['password'])
                 ->setRole($row['role'])
                 ->setCreatedAt($row['created_at']);
+
             return $user;
         }
 
         return false;
     }
 
-    public static function loadAllSearchedUsers(PDO $connection, $username)
+    public function loadAllSearchedUsers($username)
     {
         $sql = "SELECT id, username FROM users WHERE username LIKE :username";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindValue('username', $username.'%');
@@ -175,7 +162,7 @@ class UserRepository
         return $result;
     }
 
-    public static function loadAllUsersByEmail(PDO $connection, $email)
+    public function loadAllUsersByEmail(PDO $connection, $email)
     {
         $sql = "SELECT id FROM users WHERE email = :email";
         $result = $connection->prepare($sql);
@@ -189,7 +176,7 @@ class UserRepository
         return $result;
     }
 
-    public static function loadAllUsersByUsername(PDO $connection, $username)
+    public function loadAllUsersByUsername(PDO $connection, $username)
     {
         $sql = "SELECT id FROM users WHERE username = :username";
 
@@ -204,13 +191,13 @@ class UserRepository
         return $result;
     }
 
-    public static function loadUserByUsername(PDO $connection, $username)
+    public function loadUserByUsername($username)
     {
         $sql = "SELECT * FROM users WHERE username = :username";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
         //' OR 1=1 --
 
@@ -232,11 +219,11 @@ class UserRepository
         return false;
     }
 
-    public static function loadUsersExceptMe(PDO $connection, $userId)
+    public function loadUsersExceptMe($userId)
     {
         $sql = "SELECT id, username FROM users WHERE id <> :user_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId, PDO::PARAM_INT);
         $result->execute();
 
@@ -250,4 +237,27 @@ class UserRepository
 
         return false;
     }
+
+    //    public function loadSql(PDO $connection)
+//    {
+//        $sql = "SELECT * FROM users";
+//        $result = $connection->prepare($sql);
+//        if (!$result) {
+//            die("Query Error!" . $connection->errorInfo());
+//        }
+//
+//        $result->execute();
+//        $array = [];
+//        if ($result->rowCount() > 0) {
+////            foreach ($result as $row) {
+////                return $row;
+////            }
+//            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+//                $array[] = $row;
+//            }
+//            return $array;
+//        }
+//
+//        return false;
+//    }
 }

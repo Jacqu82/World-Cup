@@ -1,9 +1,11 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
@@ -11,7 +13,9 @@ if (!isset($_SESSION['login'])) {
 
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$postRepository = $container->getPostRepository();
+$imageRepository = $container->getImageRepository();
 
 ?>
 
@@ -36,21 +40,21 @@ include '../widget/header.php';
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
 
-            $users = UserRepository::loadUserById($connection, $id);
+            $users = $container->getUserRepository()->loadUserById($id);
             echo '<h1>' . $users->getUsername() . '</h1>';
             echo '<h3>Adres E-mail: ' . $users->getEmail() . '</h3>';
             echo '<h3>Data utworzenia profilu: ' . $users->getCreatedAt() . '</h3>';
             ?>
 
             <img src="  <?php
-            $firstImage = ImageRepository::loadFirstImageDetailsByUserId($connection, $id);
+            $firstImage = $imageRepository->loadFirstImageDetailsByUserId($id);
             echo $firstImage['image_path']; ?> " width='150' height='100'/><br/>
             <?php
 
-            $count = ImageRepository::countAllImagesByUserId($connection, $id);
+            $count = $imageRepository->countAllImagesByUserId($id);
             echo '<h3>Liczba zdjęć użytkownika ' . $users->getUsername() . ' ( ' . $count . ' )</h3>';
 
-            $images = ImageRepository::loadImageDetailsByUserId($connection, $id);
+            $images = $imageRepository->loadImageDetailsByUserId($id);
             foreach ($images as $image) {
 
                 ?>
@@ -63,9 +67,9 @@ include '../widget/header.php';
 
             }
 
-            $count = PostRepository::countAllPostsByUserId($connection, $id);
+            $count = $postRepository->countAllPostsByUserId($id);
             echo '<h3>Wszystkie posty użytkownika ' . $users->getUsername() . ' ( ' . $count . ' )</h3>';
-            $myPosts = PostRepository::loadAllPostsByUserId($connection, $id);
+            $myPosts = $postRepository->loadAllPostsByUserId($id);
             foreach ($myPosts as $post) {
                 echo $post['created_at'] . "<br/>";
                 echo $post['text'] . "<br/><br/>";

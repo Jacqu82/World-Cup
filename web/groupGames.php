@@ -1,13 +1,19 @@
 <?php
-require_once '../src/lib.php';
-require_once '../connection.php';
+
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
 }
 //if for every page for logged user!!!
-$user = loggedUser($connection);
+
+$container = new Container($configuration);
+
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +30,7 @@ include '../widget/header.php';
     <hr/>
     <?php
 
-    $groups = GroupRepository::loadAllGroups($connection);
+    $groups = $container->getGroupRepository()->loadAllGroups();
     foreach ($groups as $group) {
         $id = $group['id'];
         $name = $group['name'];

@@ -1,14 +1,24 @@
 <?php
 
+namespace Repository;
+
+use PDO;
 
 class GroupRepository
 {
-    public static function loadAllGroups(PDO $connection)
+    private $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function loadAllGroups()
     {
         $sql = "SELECT * FROM groups";
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->execute();
@@ -23,12 +33,12 @@ class GroupRepository
         return false;
     }
 
-    public static function loadAllGroupsById(PDO $connection, $id)
+    public function loadAllGroupsById($id)
     {
         $sql = "SELECT * FROM groups WHERE id = :id";
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('id', $id);

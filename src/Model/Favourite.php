@@ -1,18 +1,21 @@
 <?php
 
+namespace Model;
 
-class Post
+
+class Favourite
 {
     private $id;
     private $userId;
-    private $text;
+    private $nationalTeamId;
     private $createdAt;
+
 
     public function __construct()
     {
         $this->id = -1;
         $this->userId = -1;
-        $this->text = '';
+        $this->nationalTeamId = -1;
         $this->createdAt = '';
     }
 
@@ -53,20 +56,20 @@ class Post
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getText()
+    public function getNationalTeamId()
     {
-        return $this->text;
+        return $this->nationalTeamId;
     }
 
     /**
-     * @param string $text
-     * @return $this;
+     * @param int $nationalTeamId
+     * @return $this
      */
-    public function setText($text)
+    public function setNationalTeamId($nationalTeamId)
     {
-        $this->text = $text;
+        $this->nationalTeamId = $nationalTeamId;
         return $this;
     }
 

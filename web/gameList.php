@@ -1,13 +1,20 @@
 <?php
-require_once '../src/lib.php';
-require_once '../connection.php';
+
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
 }
 //if for every page for logged user!!!
-$user = loggedUser($connection);
+
+$container = new Container($configuration);
+$matchRepository = $container->getMatchRepository();
+
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +33,7 @@ include '../widget/header.php';
     echo '<h2>' . $_GET['name'] . '</h2>';
 
     echo '<h3>1.kolejka</h3>';
-    $rounds1 = MatchRepository::loadAllMatchesByGroupIdAndRound($connection, $_GET['id'], 1);
+    $rounds1 = $matchRepository->loadAllMatchesByGroupIdAndRound($_GET['id'], 1);
     foreach ($rounds1 as $round1) {
         echo '<h4>' . $round1['date'] . ' ' . $round1['hour'] . ' - ' . $round1['city'] . '</h4>';
         echo '<h2>' . $round1['team1'] . ' - ' . $round1['team2'] . '
@@ -35,7 +42,7 @@ include '../widget/header.php';
     echo '<hr/>';
 
     echo '<h3>2.kolejka</h3>';
-    $rounds2 = MatchRepository::loadAllMatchesByGroupIdAndRound($connection, $_GET['id'], 2);
+    $rounds2 = $matchRepository->loadAllMatchesByGroupIdAndRound($_GET['id'], 2);
     foreach ($rounds2 as $round2) {
         echo '<h4>' . $round2['date'] . ' ' . $round2['hour'] . ' - ' . $round2['city'] . '</h4>';
         echo '<h2>' . $round2['team1'] . ' - ' . $round2['team2'] . '
@@ -44,7 +51,7 @@ include '../widget/header.php';
     echo '<hr/>';
 
     echo '<h3>3.kolejka</h3>';
-    $rounds3 = MatchRepository::loadAllMatchesByGroupIdAndRound($connection, $_GET['id'], 3);
+    $rounds3 = $matchRepository->loadAllMatchesByGroupIdAndRound($_GET['id'], 3);
     foreach ($rounds3 as $round3) {
         echo '<h4>' . $round3['date'] . ' ' . $round3['hour'] . ' - ' . $round3['city'] . '</h4>';
         echo '<h2>' . $round3['team1'] . ' - ' . $round3['team2'] . '
@@ -71,8 +78,9 @@ include '../widget/header.php';
         </thead>
         <?php
 
-        $matches = MatchRepository::loadAllMatchesByGroupId($connection, $_GET['id']);
-        foreach ($matches as $match) {
+        $matches = $matchRepository->loadAllMatchesByGroupId($_GET['id']);
+        if ($matches) {
+            foreach ($matches as $match) {
 
 //            $homeGoalsFor = MatchRepository::loadGoalsForHomeByTeamId($connection, $team['id']);
 //            $awayGoalsFor = MatchRepository::loadGoalsForAwayByTeamId($connection, $team['id']);
@@ -82,23 +90,25 @@ include '../widget/header.php';
 //            $goalsAgainst = $homeGoalsAgainst + $awayGoalsAgainst;
 
 
-            ?>
-            <tbody>
-            <tr>
-                <td></td>
-                <td><?php echo $match['team1'] ?></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            </tbody>
-            <?php
+                ?>
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td><?php echo $match['team1'] ?></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+                <?php
+            }
         }
+
         ?>
     </table>
     <hr/>

@@ -1,15 +1,18 @@
 <?php
 
-require_once '../connection.php';
+session_start();
+
 require_once '../autoload.php';
 
-session_start();
+use Service\Container;
+
+$container = new Container($configuration);
 
 if (isset($_POST['username']) || isset($_POST['password'])) {
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
     $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-    $user = UserRepository::loadUserByUsername($connection, $username);
+    $user = $container->getUserRepository()->loadUserByUsername($username);
     if (!$user) {
         $_SESSION['error'] = 'Niepoprawny login lub hasło!';
         header('Location: loginForm.php');

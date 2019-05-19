@@ -1,20 +1,17 @@
 <?php
 
+namespace Model;
 
-class NationalTeam
+class Group
 {
     private $id;
     private $name;
-    private $coach;
-    private $groupId;
     private $createdAt;
 
     public function __construct()
     {
         $this->id = -1;
         $this->name = '';
-        $this->coach = '';
-        $this->groupId = -1;
         $this->createdAt = '';
     }
 
@@ -57,42 +54,6 @@ class NationalTeam
     /**
      * @return string
      */
-    public function getCoach()
-    {
-        return $this->coach;
-    }
-
-    /**
-     * @param string $coach
-     * @return $this
-     */
-    public function setCoach($coach)
-    {
-        $this->coach = $coach;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    /**
-     * @param int $groupId
-     * @return $this
-     */
-    public function setGroupId($groupId)
-    {
-        $this->groupId = $groupId;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
@@ -100,7 +61,7 @@ class NationalTeam
 
     /**
      * @param string $createdAt
-     * @return $this
+     * @return $this;
      */
     public function setCreatedAt($createdAt)
     {

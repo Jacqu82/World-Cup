@@ -1,8 +1,20 @@
 <?php
 
+namespace Repository;
+
+use Model\Image;
+use PDO;
+
 class ImageRepository
 {
-    public static function saveToDB(PDO $connection, Image $image)
+    private $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function saveToDB(PDO $connection, Image $image)
     {
         $id = $image->getId();
         $imagePath = $image->getImagePath();
@@ -28,13 +40,13 @@ class ImageRepository
     }
 
 
-    public static function loadImageDetailsByUserId(PDO $connection, $userId)
+    public function loadImageDetailsByUserId($userId)
     {
         $sql = "SELECT * FROM images WHERE user_id = :user_id ORDER BY created_at DESC";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $imageArray = [];
@@ -47,7 +59,7 @@ class ImageRepository
         return $imageArray;
     }
 
-    public static function loadNationalTeamImageDetails(PDO $connection)
+    public function loadNationalTeamImageDetails(PDO $connection)
     {
         $sql = "SELECT * FROM images WHERE national_team_id IS NOT NULL";
 
@@ -65,7 +77,7 @@ class ImageRepository
         return $imageArray;
     }
 
-    public static function loadNationalTeamFlag(PDO $connection)
+    public function loadNationalTeamFlag(PDO $connection)
     {
         $sql = "SELECT * FROM images WHERE flag_id IS NOT NULL";
 
@@ -83,7 +95,7 @@ class ImageRepository
         return $imageArray;
     }
 
-    public static function loadUsersImageDetails(PDO $connection, $id)
+    public function loadUsersImageDetails(PDO $connection, $id)
     {
         $sql = "SELECT i.id, i.image_path, i.user_id, u.username FROM images i 
                 LEFT JOIN users u ON i.user_id = u.id
@@ -105,13 +117,13 @@ class ImageRepository
         return $imageArray;
     }
 
-    public static function loadImageDetailsByNationalTeamId(PDO $connection, $nationalTeamId)
+    public function loadImageDetailsByNationalTeamId($nationalTeamId)
     {
         $sql = "SELECT * FROM images WHERE national_team_id = :national_team_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $imageNationsArray = [];
@@ -121,16 +133,17 @@ class ImageRepository
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $imageNationsArray[] = $row;
         }
+
         return $imageNationsArray;
     }
 
-    public static function loadFlagByNationalTeamId(PDO $connection, $nationalTeamId)
+    public function loadFlagByNationalTeamId($nationalTeamId)
     {
         $sql = "SELECT * FROM images WHERE flag_id = :national_team_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $imageNationsArray = [];
@@ -140,16 +153,17 @@ class ImageRepository
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $imageNationsArray[] = $row;
         }
+
         return $imageNationsArray;
     }
 
-    public static function loadFirstImageDetailsByUserId(PDO $connection, $userId)
+    public function loadFirstImageDetailsByUserId($userId)
     {
         $sql = "SELECT * FROM images WHERE user_id = :user_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         if (!$result) {
-            die("Query Error!" . $connection->errorInfo());
+            die("Query Error!" . $this->pdo->errorInfo());
         }
 
         $result->bindParam('user_id', $userId);
@@ -158,10 +172,11 @@ class ImageRepository
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             return $row;
         }
+
         return null;
     }
 
-    public static function loadImagePath(PDO $connection, $id)
+    public function loadImagePath(PDO $connection, $id)
     {
         $sql = "SELECT image_path FROM images WHERE id = :id";
 
@@ -179,7 +194,7 @@ class ImageRepository
         return $path;
     }
 
-    public static function loadImageById(PDO $connection, $id)
+    public function loadImageById(PDO $connection, $id)
     {
         $sql = "SELECT * FROM images WHERE id = :id";
 
@@ -207,7 +222,7 @@ class ImageRepository
         return false;
     }
 
-    public static function delete(PDO $connection, Image $image)
+    public function delete(PDO $connection, Image $image)
     {
         $id = $image->getId();
 
@@ -227,16 +242,16 @@ class ImageRepository
         return true;
     }
 
-    public static function countAllImagesByUserId(PDO $connection, $userId)
+    public function countAllImagesByUserId($userId)
     {
         $sql = "SELECT count(id) as count FROM images WHERE user_id = :user_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
 
         if ($result->rowCount() > 0) {
@@ -248,7 +263,7 @@ class ImageRepository
         return false;
     }
 
-    public static function updateImagePath(PDO $connection, $path, $id)
+    public function updateImagePath(PDO $connection, $path, $id)
     {
         $sql = "UPDATE images SET image_path = :image_path WHERE id = :id";
 
@@ -264,7 +279,7 @@ class ImageRepository
         return $result;
     }
 
-    public static function countAllImagesExceptAdmin(PDO $connection, $id)
+    public function countAllImagesExceptAdmin(PDO $connection, $id)
     {
         $sql = "SELECT count(id) as countImages FROM images WHERE user_id <> :id";
 

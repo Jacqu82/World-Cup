@@ -24,37 +24,67 @@ include '../widget/header.php';
     <hr/>
     <?php
 
+
+
+    $groupId = $_GET['id'];
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['match_id']) && isset($_POST['goals_for']) && isset($_POST['goals_against'])) {
             MatchRepository::updateMatchGoalsByMatchId(
                     $connection, $_POST['match_id'], $_POST['goals_for'], $_POST['goals_against']);
+
+
+            $matchId = MatchRepository::findOneById($connection, $_POST['match_id']);
+            //var_dump(MatchRepository::findOneById($connection, $_POST['match_id']));die;
+
+            $groupTableHome = new GroupTable();
+            $groupTableHome
+                ->setTeamId($_POST['team1_id'])
+                ->setGroupId($groupId)
+                ->setRound($matchId['round'])
+                ->setWon(1)
+                ->setDraw(1)
+                ->setLose(1)
+                ->setGoalsFor(2)
+                ->setGoalsAgainst(2)
+                ->setGoalsDiff(2 - 2)
+                ->setPoints(1);
+
+            GroupTablesRepository::saveToDB($connection, $groupTableHome);
+
+            $groupTableAway = new GroupTable();
+            $groupTableAway
+                ->setTeamId($_POST['team2_id'])
+                ->setGroupId($groupId)
+                ->setRound($matchId['round'])
+                ->setWon(1)
+                ->setDraw(1)
+                ->setLose(1)
+                ->setGoalsFor(3)
+                ->setGoalsAgainst(3)
+                ->setGoalsDiff(3 - 3)
+                ->setPoints(1);
+
+            GroupTablesRepository::saveToDB($connection, $groupTableAway);
+
+            header('Location: editGames.php?id=' . $groupId);
         }
     }
 
-    $matches = MatchRepository::loadAllMatchesByGroupId($connection, $_GET['id']);
+    $matches = MatchRepository::loadAllMatchesByGroupId($connection, $groupId);
+    //var_dump($matches);die;
     foreach ($matches as $match) {
+        //var_dump($match);
         echo '<h4>' . $match['date'] . ' ' . $match['hour'] . ' - ' . $match['city'] . '</h4>';
         echo '<h2>' . $match['team1'] . ' - ' . $match['team2'] . '</h2>';
-
-//        $groupTable = new GroupTable();
-//        $groupTable
-//            ->setTeamId($match['team1_id'])
-//            ->setGroupId($_GET['id'])
-//            ->setRound(1)
-//            ->setWon($won)
-//            ->setDraw($draw)
-//            ->setLose($lose)
-//            ->setGoalsFor($match['goals_for'])
-//            ->setGoalsAgainst($match['goals_against'])
-//            ->setGoalsDiff($match['goals_for'] - $match['goals_against'])
-//            ->setPoints($points);
-//
-//        GroupTablesRepository::saveToDB($connection, $groupTable);
 
         if (($match['goals_for'] === null) && ($match['goals_against'] === null)) {
             ?>
             <form method="post" action="#">
                 <input type="hidden" name="match_id" value="<?php echo $match['id']; ?>"/>
+                <input type="hidden" name="team1_id" value="<?php echo $match['team1_id']; ?>"/>
+                <input type="hidden" name="team2_id" value="<?php echo $match['team2_id']; ?>"/>
+<!--                <input type="hidden" name="group_id" value="--><?php //echo $match['group_id']; ?><!--"/>-->
                 <input type="number" name="goals_for" class="forms-goal" value="<?php echo $match['goals_for'] ?>"/>
                 <input type="number" name="goals_against" class="forms-goal" value="<?php echo $match['goals_against'] ?>"/><br/>
                 <button type="submit" class="btn btn-success links">Zapisz wynik</button>

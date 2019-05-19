@@ -1,9 +1,11 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
@@ -11,7 +13,9 @@ if (!isset($_SESSION['login'])) {
 
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$messageRepository = $container->getMessageRepository();
 
 ?>
 
@@ -33,15 +37,15 @@ include '../widget/header.php';
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['delete_message']) && isset($_POST['message_id'])) {
             $messageId = $_POST['message_id'];
-            $message = MessageRepository::loadMessageById($connection, $messageId);
-            MessageRepository::delete($connection, $message);
+            $message = $messageRepository->loadMessageById($messageId);
+            $messageRepository->delete($message);
         }
     }
 
-    $countSent = MessageRepository::countAllSentMessages($connection, $user->getId());
+    $countSent = $messageRepository->countAllSentMessages($user->getId());
     echo '<h3>Skrzynka nadawcza ( ' . $countSent . ' ) </h3>';
 
-    $sent = MessageRepository::loadAllSentMessagesByUserId($connection, $user->getId());
+    $sent = $messageRepository->loadAllSentMessagesByUserId($user->getId());
 
     foreach ($sent as $row) {
         echo 'Do: ' . $row['username'] . "<br/>";

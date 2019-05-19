@@ -1,4 +1,5 @@
-config.php
+autoload.php
 .idea/
 images/
 content/
+/vendor/

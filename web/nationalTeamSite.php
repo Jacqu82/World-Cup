@@ -1,13 +1,22 @@
 <?php
-require_once '../src/lib.php';
-require_once '../connection.php';
+
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Model\Favourite;
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
 }
 //if for every page for logged user!!!
-$user = loggedUser($connection);
+
+$container = new Container($configuration);
+$favouriteRepository = $container->getFavouriteRepository();
+$imageRepository = $container->getImageRepository();
+
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +42,7 @@ include '../widget/header.php';
             $favourite
                 ->setUserId($userId)
                 ->setNationalTeamId($teamId);
-            FavouriteRepository::saveToDB($connection, $favourite);
+            $favouriteRepository->saveToDB($favourite);
         }
     }
 
@@ -43,13 +52,13 @@ include '../widget/header.php';
         }
 
 
-        $nationalTeamDetails = NationalTeamRepository::loadNationalTeamsById($connection, $nationalTeamId);
+        $nationalTeamDetails = $container->getNationalTeamRepository()->loadNationalTeamsById($nationalTeamId);
         foreach ($nationalTeamDetails as $nationalTeamDetail) {
             echo '<h1>' . $nationalTeamDetail['name'] . '</h1>';
             echo '<h3>Trener reprezentacji: ' . $nationalTeamDetail['coach'] . '</h3>';
         }
 
-        $flag = ImageRepository::loadFlagByNationalTeamId($connection, $nationalTeamId);
+        $flag = $imageRepository->loadFlagByNationalTeamId($nationalTeamId);
         foreach ($flag as $image) {
 
             ?>
@@ -62,7 +71,7 @@ include '../widget/header.php';
 
         echo '<hr/>';
 
-        $secure = FavouriteRepository::secureVote($connection, $user->getId(), $nationalTeamId);
+        $secure = $favouriteRepository->secureVote($user->getId(), $nationalTeamId);
         if ($secure->rowCount() == 0) {
             ?>
             <div class="vote">
@@ -78,7 +87,7 @@ include '../widget/header.php';
             echo "</div>";
         }
 
-        $images = ImageRepository::loadImageDetailsByNationalTeamId($connection, $nationalTeamId);
+        $images = $imageRepository->loadImageDetailsByNationalTeamId($nationalTeamId);
         foreach ($images as $image) {
 
             ?>
@@ -91,7 +100,7 @@ include '../widget/header.php';
     }
     echo '<hr/>';
 
-    $groups = GroupRepository::loadAllGroupsById($connection, $_SESSION['group_id']);
+    $groups = $container->getGroupRepository()->loadAllGroupsById($_SESSION['group_id']);
     foreach ($groups as $group) {
         $id = $group['id'];
     }

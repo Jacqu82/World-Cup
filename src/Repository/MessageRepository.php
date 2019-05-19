@@ -1,9 +1,20 @@
 <?php
 
+namespace Repository;
+
+use Model\Message;
+use PDO;
 
 class MessageRepository
 {
-    public static function saveToDB(PDO $connection, Message $message)
+    private $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function saveToDB(Message $message)
     {
         $id = $message->getId();
         $senderId = $message->getSenderId();
@@ -15,73 +26,77 @@ class MessageRepository
             $sql = "INSERT INTO messages (sender_id, receiver_id, text, is_read)
                     VALUES (:sender_id, :receiver_id, :text, :is_read)";
 
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
             $result->bindParam('sender_id', $senderId);
             $result->bindParam('receiver_id', $receiverId);
             $result->bindParam('text', $text);
             $result->bindParam('is_read', $isRead);
 
             $result->execute();
-            $id = $connection->lastInsertId();
+            $id = $this->pdo->lastInsertId();
+
             return true;
         }
+
         return false;
     }
 
-    public static function loadAllReceivedMessagesByUserId(PDO $connection, $userId)
+    public function loadAllReceivedMessagesByUserId($userId)
     {
         $sql = "SELECT m.id, m.text, m.is_read, m.created_at, u.username FROM messages m 
                 LEFT JOIN users u ON m.sender_id = u.id
                 WHERE m.receiver_id = :user_id
                 ORDER BY m.created_at DESC";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
+
         return $result;
     }
 
-    public static function loadAllSentMessagesByUserId(PDO $connection, $userId)
+    public function loadAllSentMessagesByUserId($userId)
     {
         $sql = "SELECT m.id, m.text, m.created_at, u.username FROM messages m
                 LEFT JOIN users u ON m.receiver_id = u.id
                 WHERE m.sender_id = :user_id
                 ORDER BY m.created_at DESC";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
+
         return $result;
     }
 
-    public static function setMessageStatus(PDO $connection, $messageId, $status)
+    public function setMessageStatus($messageId, $status)
     {
         $sql = "UPDATE messages SET is_read = :status WHERE id = :message_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('status', $status);
         $result->bindParam('message_id', $messageId);
         $result->execute();
 
         if (!$result) {
-            die("Connection Error" . $connection->errorInfo());
+            die("Connection Error" . $this->pdo->errorInfo());
         }
         return $result;
     }
 
-    public static function loadMessageById(PDO $connection, $id)
+    public function loadMessageById($id)
     {
         $sql = "SELECT * FROM messages WHERE id = :id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('id', $id);
         $result->execute();
 
@@ -101,13 +116,13 @@ class MessageRepository
         return false;
     }
 
-    public static function delete(PDO $connection, Message $message)
+    public function delete(Message $message)
     {
         $id = $message->getId();
 
         if ($id != -1) {
             $sql = "DELETE FROM messages WHERE id = :id";
-            $result = $connection->prepare($sql);
+            $result = $this->pdo->prepare($sql);
 
             $result->bindParam('id', $id);
             $result->execute();
@@ -121,11 +136,11 @@ class MessageRepository
         return true;
     }
 
-    public static function countAllUnreadMessages(PDO $connection, $userId)
+    public function countAllUnreadMessages($userId)
     {
         $sql = "SELECT count(id) as unread FROM messages WHERE is_read = 0 AND receiver_id = :user_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 
@@ -138,11 +153,11 @@ class MessageRepository
         return false;
     }
 
-    public static function countAllReceivedMessages(PDO $connection, $userId)
+    public function countAllReceivedMessages($userId)
     {
         $sql = "SELECT count(id) as received FROM messages WHERE receiver_id = :user_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 
@@ -155,11 +170,11 @@ class MessageRepository
         return false;
     }
 
-    public static function countAllSentMessages(PDO $connection, $userId)
+    public function countAllSentMessages($userId)
     {
         $sql = "SELECT count(id) as sent FROM messages WHERE sender_id = :user_id";
 
-        $result = $connection->prepare($sql);
+        $result = $this->pdo->prepare($sql);
         $result->bindParam('user_id', $userId);
         $result->execute();
 

@@ -1,9 +1,11 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
@@ -11,7 +13,9 @@ if (!isset($_SESSION['login'])) {
 
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$messageRepository = $container->getMessageRepository();
 
 ?>
 
@@ -33,28 +37,28 @@ include '../widget/header.php';
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['delete_messege']) && isset($_POST['message_id'])) {
             $messageId = $_POST['message_id'];
-            $message = MessageRepository::loadMessageById($connection, $messageId);
-            MessageRepository::delete($connection, $message);
+            $message = $messageRepository->loadMessageById($messageId);
+            $messageRepository->delete($message);
         }
     }
 
-    $countReceived = MessageRepository::countAllReceivedMessages($connection, $user->getId());
+    $countReceived = $messageRepository->countAllReceivedMessages($user->getId());
     echo '<h3>Skrzynka odbiorcza ( ' . $countReceived . ' ) </h3>';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['set_message_as_read']) && isset($_POST['message_id'])) {
             $id = $_POST['message_id'];
-            MessageRepository::setMessageStatus($connection, $id, 1);
+            $messageRepository->setMessageStatus($id, 1);
         } else if (isset($_POST['set_message_as_unread']) && isset($_POST['message_id'])) {
             $id = $_POST['message_id'];
-            MessageRepository::setMessageStatus($connection, $id, 0);
+            $messageRepository->setMessageStatus($id, 0);
         }
     }
 
-    $unread = MessageRepository::countAllUnreadMessages($connection, $user->getId());
+    $unread = $messageRepository->countAllUnreadMessages($user->getId());
     echo 'Nieprzyczatane wiadomości: ( ' . $unread . ' )<br/>';
 
-    $received = MessageRepository::loadAllReceivedMessagesByUserId($connection, $user->getId());
+    $received = $messageRepository->loadAllReceivedMessagesByUserId($user->getId());
     foreach ($received as $row) {
         echo "Od " . $row['username'] . "<br/>";
         if ($row['is_read'] == 0) {

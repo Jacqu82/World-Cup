@@ -1,9 +1,11 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
@@ -11,7 +13,11 @@ if (!isset($_SESSION['login'])) {
 
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$imageRepository = $container->getImageRepository();
+$postRepository = $container->getPostRepository();
+$commentRepository = $container->getCommentRepository();
 
 ?>
 
@@ -31,7 +37,7 @@ include '../widget/header.php';
     <hr/>
     <h3>Witaj <?php echo $user->getUsername() . "!"; ?></h3>
     <img src="  <?php
-    $firstImage = ImageRepository::loadFirstImageDetailsByUserId($connection, $user->getId());
+    $firstImage = $imageRepository->loadFirstImageDetailsByUserId($user->getId());
     echo $firstImage['image_path']; ?> " width='150' height='100'/><br/>
     <?php if ($user->getRole() === 'admin') {
         echo '<h3><a href="../admin/adminPanel.php" class="btn btn-success links">Panel Administracyjny</a></h3>';
@@ -41,16 +47,16 @@ include '../widget/header.php';
 
     <?php
 
-    $favourites = FavouriteRepository::loadAllFavouritesTeamsByUserId($connection, $user->getId());
+    $favourites = $container->getFavouriteRepository()->loadAllFavouritesTeamsByUserId($user->getId());
     echo '<h3>Reprezentacje, którym kibicujesz:</h3>';
     foreach ($favourites as $favourite) {
-        echo '<h4>'.$favourite['name'].'</h4>';
+        echo '<h4>' . $favourite['name'] . '</h4>';
     }
 
-    $count = ImageRepository::countAllImagesByUserId($connection, $user->getId());
+    $count = $imageRepository->countAllImagesByUserId($user->getId());
     echo '<h3>Liczba Twoich zdjęć ( ' . $count . ' )</h3>';
 
-    $images = ImageRepository::loadImageDetailsByUserId($connection, $user->getId());
+    $images = $imageRepository->loadImageDetailsByUserId($user->getId());
     foreach ($images as $image) {
 
         ?>
@@ -73,7 +79,7 @@ include '../widget/header.php';
                     <strong>Post może mieć maksymalnie 150 znaków!</strong>
                 </div>';
             } else {
-                PostRepository::updatePostText($connection, $postId, $editText);
+                $postRepository->updatePostText($postId, $editText);
                 echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Post pomyślnie edytowany :)</strong>
@@ -83,8 +89,8 @@ include '../widget/header.php';
 
         if (isset($_POST['post_id']) && isset($_POST['delete_post'])) {
             $postId = $_POST['post_id'];
-            $postToDelete = PostRepository::loadPostById($connection, $postId);
-            PostRepository::delete($connection, $postToDelete);
+            $postToDelete = $postRepository->loadPostById($postId);
+            $postRepository->delete($postToDelete);
             echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Post pomyślnie usynięty :)</strong>
@@ -92,9 +98,9 @@ include '../widget/header.php';
         }
     }
 
-    $count = PostRepository::countAllPostsByUserId($connection, $user->getId());
+    $count = $postRepository->countAllPostsByUserId($user->getId());
     echo '<h3>Wszystkie Twoje posty ( ' . $count . ' )</h3>';
-    $myPosts = PostRepository::loadAllPostsByUserId($connection, $user->getId());
+    $myPosts = $postRepository->loadAllPostsByUserId($user->getId());
     foreach ($myPosts as $post) {
         echo $post['created_at'] . "<br/>";
         echo $post['text'] . "<br/><br/>";
@@ -131,7 +137,7 @@ include '../widget/header.php';
                     <strong>Komentarz może mieć maksymalnie 80 znaków!</strong>
                 </div>';
             } else {
-                CommentRepository::updateCommentText($connection, $commentId, $editComment);
+                $commentRepository->updateCommentText($commentId, $editComment);
                 echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Komentarz pomyślnie edytowany :)</strong>
@@ -141,8 +147,8 @@ include '../widget/header.php';
 
         if (isset($_POST['comment_id']) && isset($_POST['delete_comment'])) {
             $commentId = $_POST['comment_id'];
-            $commentToDelete = CommentRepository::loadCommentById($connection, $commentId);
-            CommentRepository::delete($connection, $commentToDelete);
+            $commentToDelete = $commentRepository->loadCommentById($commentId);
+            $commentRepository->delete($commentToDelete);
             echo '
                 <div class="flash-message alert alert-success alert-dismissible" role="alert">
                     <strong>Komentarz pomyślnie usynięty :)</strong>
@@ -150,9 +156,9 @@ include '../widget/header.php';
         }
     }
 
-    $countComments = CommentRepository::countAllCommentsByUserId($connection, $user->getId());
+    $countComments = $commentRepository->countAllCommentsByUserId($user->getId());
     echo '<h3>Wszystkie Twoje komentarze ( ' . $countComments . ' )</h3>';
-    $myComments = CommentRepository::loadAllCommentsByUserId($connection, $user->getId());
+    $myComments = $commentRepository->loadAllCommentsByUserId($user->getId());
     foreach ($myComments as $comment) {
         echo $comment['created_at'] . "<br/>";
         echo $comment['text'] . "<br/><br/>";

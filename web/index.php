@@ -2,10 +2,17 @@
 
 session_start();
 
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (isset($_SESSION['login'])) {
     header('Location: mainPage.php');
     exit();
 }
+
+$container = new Container($configuration); //to delete
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">

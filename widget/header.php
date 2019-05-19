@@ -1,6 +1,9 @@
 <?php
 
-$user = loggedUser($connection);
+use Service\Container;
+
+$container = new Container($configuration);
+$user = $container->loggedUser();
 
 ?>
 <div class="container">
@@ -17,7 +20,7 @@ $user = loggedUser($connection);
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php
-                    $unread = MessageRepository::countAllUnreadMessages($connection, $user->getId());
+                    $unread = $container->getMessageRepository()->countAllUnreadMessages($user->getId());
                     ?>
                     <li><a href="../web/messageSite.php">Messanger
                             <span class="badge"><?php echo $unread; ?></span></a></li>

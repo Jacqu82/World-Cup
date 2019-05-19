@@ -1,8 +1,9 @@
 <?php
 
-spl_autoload_register(function($className) {
-    $path = __DIR__.'/src/'.str_replace('\\', '/', $className).'.php';
-    if (file_exists($path)) {
-        require $path;
-    }
-});
+require __DIR__.'/vendor/autoload.php';
+
+$configuration =  array(
+    'db_dsn' => 'mysql:host=localhost;dbname=worldCup_db;charset=utf8',
+    'db_user' => 'root',
+    'db_pass' => 'coderslab'
+);

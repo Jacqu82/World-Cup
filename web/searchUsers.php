@@ -1,9 +1,11 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
-
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
@@ -11,7 +13,8 @@ if (!isset($_SESSION['login'])) {
 
 //if for every page for logged user!!!
 
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
 
 ?>
 
@@ -42,7 +45,7 @@ include '../widget/header.php';
         if (isset($_POST['search'])) {
             $search = filter_input(INPUT_POST, 'search', FILTER_SANITIZE_STRING);
 
-            $users = UserRepository::loadAllSearchedUsers($connection, $search);
+            $users = $container->getUserRepository()->loadAllSearchedUsers($search);
 
             if ($users->rowCount() > 0) {
                 echo "<div class=\"flash-message alert alert-success alert-dismissible\" role=\"alert\">";

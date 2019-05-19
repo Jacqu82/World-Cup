@@ -1,9 +1,14 @@
 <?php
 
+namespace Repository;
+
+use Model\GroupTable;
+use PDO;
+
 
 class GroupTablesRepository
 {
-    public static function saveToDB(PDO $connection, GroupTable $groupTable)
+    public function saveToDB(PDO $connection, GroupTable $groupTable)
     {
         $id = $groupTable->getId();
         $teamId = $groupTable->getTeamId();
@@ -74,7 +79,7 @@ class GroupTablesRepository
         return false;
     }
 
-    public static function loadGroupTableById(PDO $connection, $teamId)
+    public function loadGroupTableById(PDO $connection, $teamId)
     {
         $sql = "SELECT * FROM group_tables WHERE team_id = :team_id";
 

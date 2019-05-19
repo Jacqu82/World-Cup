@@ -1,19 +1,22 @@
 <?php
 
+namespace Model;
 
-class Favourite
+
+class NationalTeam
 {
     private $id;
-    private $userId;
-    private $nationalTeamId;
+    private $name;
+    private $coach;
+    private $groupId;
     private $createdAt;
-
 
     public function __construct()
     {
         $this->id = -1;
-        $this->userId = -1;
-        $this->nationalTeamId = -1;
+        $this->name = '';
+        $this->coach = '';
+        $this->groupId = -1;
         $this->createdAt = '';
     }
 
@@ -36,38 +39,56 @@ class Favourite
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getUserId()
+    public function getName()
     {
-        return $this->userId;
+        return $this->name;
     }
 
     /**
-     * @param int $userId
+     * @param string $name
      * @return $this
      */
-    public function setUserId($userId)
+    public function setName($name)
     {
-        $this->userId = $userId;
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCoach()
+    {
+        return $this->coach;
+    }
+
+    /**
+     * @param string $coach
+     * @return $this
+     */
+    public function setCoach($coach)
+    {
+        $this->coach = $coach;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getNationalTeamId()
+    public function getGroupId()
     {
-        return $this->nationalTeamId;
+        return $this->groupId;
     }
 
     /**
-     * @param int $nationalTeamId
+     * @param int $groupId
      * @return $this
      */
-    public function setNationalTeamId($nationalTeamId)
+    public function setGroupId($groupId)
     {
-        $this->nationalTeamId = $nationalTeamId;
+        $this->groupId = $groupId;
         return $this;
     }
 

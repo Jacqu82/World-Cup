@@ -1,13 +1,19 @@
 <?php
-require_once '../src/lib.php';
-require_once '../connection.php';
+
 session_start();
+
+require __DIR__ . '/../autoload.php';
+
+use Service\Container;
+
 if (!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
 }
 //if for every page for logged user!!!
-$user = loggedUser($connection);
+
+$container = new Container($configuration);
+
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +35,7 @@ include '../widget/header.php';
             $groupId = $_GET['id'];
             $_SESSION['group_id'] = $groupId;
 
-            $nationalTeams = NationalTeamRepository::loadAllNationalTeamsByGroupId($connection, $groupId);
+            $nationalTeams = $container->getNationalTeamRepository()->loadAllNationalTeamsByGroupId($groupId);
             echo '<h3>' . $nationalTeams[0]['group_name'] . '</h3>';
 
             foreach ($nationalTeams as $nationalTeam) {

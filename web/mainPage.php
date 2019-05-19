@@ -1,7 +1,10 @@
 <?php
 
-require_once '../src/lib.php';
-require_once '../connection.php';
+require __DIR__ . '/../autoload.php';
+
+use Model\Comment;
+use Model\Post;
+use Service\Container;
 
 session_start();
 if (!isset($_SESSION['login'])) {
@@ -10,8 +13,10 @@ if (!isset($_SESSION['login'])) {
 }
 
 //if for every page for logged user!!!
-
-$user = loggedUser($connection);
+$container = new Container($configuration);
+$user = $container->loggedUser();
+$postRepository = $container->getPostRepository();
+$commentRepository = $container->getCommentRepository();
 
 ?>
 
@@ -58,7 +63,7 @@ include '../widget/header.php';
                     ->setUserId($user->getId())
                     ->setText($text);
                 if ($post) {
-                    PostRepository::saveToDB($connection, $post);
+                    $postRepository->saveToDB($post);
                     ?>
                     <div class="flash-message alert alert-success alert-dismissible" role="alert">
                         <strong>Post pomyślnie dodany :)</strong>
@@ -87,7 +92,7 @@ include '../widget/header.php';
                     ->setPostId($postId)
                     ->setText($commentText);
                 if ($comment) {
-                    CommentRepository::saveToDB($connection, $comment);
+                    $commentRepository->saveToDB($comment);
                     ?>
                     <div class="flash-message alert alert-success alert-dismissible" role="alert">
                         <strong>Komentarz pomyślnie dodany :)</strong>
@@ -99,14 +104,14 @@ include '../widget/header.php';
     }
 
 
-    $count = PostRepository::countAllPosts($connection);
+    $count = $postRepository->countAllPosts();
     echo '<h3>Wszystkie posty ( ' . $count . ' )</h3>';
-    $posts = PostRepository::loadAllPosts($connection);
+    $posts = $postRepository->loadAllPosts();
     foreach ($posts as $post) {
         echo "W dniu " . $post['created_at'] . " użytkownik " . $post['username'] . " napisał: <br/>";
         echo $post['text'] . "<br/><br/>";
 
-        $users = UserRepository::loadUserById($connection, $user->getId());
+        $users = $container->getUserRepository()->loadUserById($user->getId());
 
         ?>
 
@@ -122,9 +127,9 @@ include '../widget/header.php';
 
         <?php
 
-        $countComments = CommentRepository::countAllCommentsByPostId($connection, $post['id']);
+        $countComments = $commentRepository->countAllCommentsByPostId($post['id']);
         echo '<h4>Komentarze do posta ( ' . $countComments . ' )</h4>';
-        $comments = CommentRepository::loadAllCommentsByPostId($connection, $post['id']);
+        $comments = $commentRepository->loadAllCommentsByPostId($post['id']);
         foreach ($comments as $commentByPost) {
             echo "<p style='color: teal'>W dniu " . $commentByPost['created_at'] . " użytkownik " .
                 $commentByPost['username'] . " skomentował tego posta: <br/>";

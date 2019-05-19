@@ -1,15 +1,20 @@
 <?php
 
-class Group
+namespace Model;
+
+
+class Post
 {
     private $id;
-    private $name;
+    private $userId;
+    private $text;
     private $createdAt;
 
     public function __construct()
     {
         $this->id = -1;
-        $this->name = '';
+        $this->userId = -1;
+        $this->text = '';
         $this->createdAt = '';
     }
 
@@ -32,20 +37,38 @@ class Group
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getName()
+    public function getUserId()
     {
-        return $this->name;
+        return $this->userId;
     }
 
     /**
-     * @param string $name
+     * @param int $userId
      * @return $this
      */
-    public function setName($name)
+    public function setUserId($userId)
     {
-        $this->name = $name;
+        $this->userId = $userId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     * @return $this;
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
         return $this;
     }
 
@@ -59,7 +82,7 @@ class Group
 
     /**
      * @param string $createdAt
-     * @return $this;
+     * @return $this
      */
     public function setCreatedAt($createdAt)
     {
